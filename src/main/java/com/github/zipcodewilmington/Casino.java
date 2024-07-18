@@ -4,6 +4,8 @@ import com.github.zipcodewilmington.casino.CasinoAccount;
 import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
+import com.github.zipcodewilmington.casino.games.BlackJack.BlackJack;
+import com.github.zipcodewilmington.casino.games.BlackJack.BlackJackPlayer;
 import com.github.zipcodewilmington.casino.games.coinflip.CoinFlipPlayer;
 import com.github.zipcodewilmington.casino.games.coinflip.FlipCoinGame;
 import com.github.zipcodewilmington.casino.games.hangman.HangmanGame;
@@ -42,6 +44,8 @@ public class Casino implements Runnable {
                         play(new FlipCoinGame(), new CoinFlipPlayer());
                     } else if (gameSelectionInput.equals("HANGMAN")) {
                         play(new HangmanGame(), new HangmanPlayer());
+                    }else if (gameSelectionInput.equals("BLACKJACK")) {
+                        play(new BlackJack(), new BlackJackPlayer());
                     }
                     else {
                         // TODO - implement better exception handling
@@ -75,7 +79,7 @@ public class Casino implements Runnable {
         return console.getStringInput(new StringBuilder()
                 .append("Welcome to the Game Selection Dashboard!")
                 .append("\nFrom here, you can select any of the following options:")
-                .append("\n\t[ SLOTS ], [ NUMBERGUESS ], [ FLIPCOIN ], [ HANGMAN ]")
+                .append("\n\t[ SLOTS ], [ NUMBERGUESS ], [ FLIPCOIN ], [ HANGMAN ], [ BLACKJACK ] ")
                 .toString());
     }
 
