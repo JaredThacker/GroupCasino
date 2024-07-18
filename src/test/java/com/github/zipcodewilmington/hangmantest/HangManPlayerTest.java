@@ -6,6 +6,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
@@ -24,6 +25,11 @@ public class HangManPlayerTest {
         originalSystemIn = System.in; // Save original System.in
     }
 
+    @AfterEach
+    public void restoreSystemIn() {
+        System.setIn(originalSystemIn);
+    }
+
     @Test
     public void testGuessCharacter() {
         //Simulate the player input
@@ -34,7 +40,7 @@ public class HangManPlayerTest {
         hangmanPlayer.playGame();
 
         //Check if the guessed letter 'a' is revealed
-        assertTrue(hangmanGame.getCurrentState().contains("a"));
+        assertTrue(String.valueOf(hangmanGame.getCurrentState()).contains("a"));
     }
 
     @Test
@@ -47,10 +53,12 @@ public class HangManPlayerTest {
         hangmanPlayer.playGame();
 
         //Check if the guessed word "driftwood" is revealed
-        assertEquals("d r i f t w o o d", hangmanGame.getCurrentState(), "actual");
+        assertEquals("driftwood", String.valueOf(hangmanGame.getCurrentState()));
     }
 
     private void provideSimulatedInput(String input) {
+        InputStream inputStream = new ByteArrayInputStream(input.getBytes());
+        System.setIn(inputStream);
     }
 
 //    //Restore original System.in after each test

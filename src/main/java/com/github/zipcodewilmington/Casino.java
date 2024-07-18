@@ -6,6 +6,8 @@ import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 import com.github.zipcodewilmington.casino.games.coinflip.CoinFlipPlayer;
 import com.github.zipcodewilmington.casino.games.coinflip.FlipCoinGame;
+import com.github.zipcodewilmington.casino.games.hangman.HangmanGame;
+import com.github.zipcodewilmington.casino.games.hangman.HangmanPlayer;
 import com.github.zipcodewilmington.casino.games.numberguess.NumberGuessGame;
 import com.github.zipcodewilmington.casino.games.numberguess.NumberGuessPlayer;
 import com.github.zipcodewilmington.casino.games.slots.SlotsGame;
@@ -38,7 +40,10 @@ public class Casino implements Runnable {
                         play(new NumberGuessGame(), new NumberGuessPlayer());
                     } else if (gameSelectionInput.equals("FLIPCOIN")) {
                         play(new FlipCoinGame(), new CoinFlipPlayer());
-                    } else {
+                    } else if (gameSelectionInput.equals("HANGMAN")) {
+                        play(new HangmanGame(), new HangmanPlayer());
+                    }
+                    else {
                         // TODO - implement better exception handling
                         String errorMessage = "[ %s ] is an invalid game selection";
                         throw new RuntimeException(String.format(errorMessage, gameSelectionInput));
@@ -70,7 +75,7 @@ public class Casino implements Runnable {
         return console.getStringInput(new StringBuilder()
                 .append("Welcome to the Game Selection Dashboard!")
                 .append("\nFrom here, you can select any of the following options:")
-                .append("\n\t[ SLOTS ], [ NUMBERGUESS ], [ FLIPCOIN ]")
+                .append("\n\t[ SLOTS ], [ NUMBERGUESS ], [ FLIPCOIN ], [ HANGMAN ]")
                 .toString());
     }
 
