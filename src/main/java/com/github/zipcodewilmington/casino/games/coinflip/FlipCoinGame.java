@@ -1,13 +1,15 @@
 package com.github.zipcodewilmington.casino.games.coinflip;
 
 import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
 import java.util.Random;
 
-public class FlipCoinGame implements PlayerInterface {
+public class FlipCoinGame implements GameInterface {
     int heads = 2;
     int tails = 1;
+    PlayerInterface player;
     static Random random = new Random();
 
     //        System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
@@ -37,15 +39,6 @@ public class FlipCoinGame implements PlayerInterface {
     }
 
 
-    @Override
-    public CasinoAccount getArcadeAccount() {
-        return null;
-    }
-
-    @Override
-    public <SomeReturnType> SomeReturnType play() {
-        return null;
-    }
 
 
 
@@ -67,5 +60,20 @@ public class FlipCoinGame implements PlayerInterface {
     }
 
 
+    @Override
+    public void add(PlayerInterface player) {
+        this.player = player;
 
+    }
+
+    @Override
+    public void remove(PlayerInterface player) {
+
+    }
+
+    @Override
+    public void run() {
+        flipCoin(1,2);
+
+    }
 }
