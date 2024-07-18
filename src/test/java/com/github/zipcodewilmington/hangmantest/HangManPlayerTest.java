@@ -1,8 +1,12 @@
 package com.github.zipcodewilmington.hangmantest;
 
+import com.github.zipcodewilmington.casino.games.hangman.HangmanGame;
+import com.github.zipcodewilmington.casino.games.hangman.HangmanPlayer;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.io.InputStream;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +34,7 @@ public class HangManPlayerTest {
         hangmanPlayer.playGame();
 
         //Check if the guessed letter 'a' is revealed
-        assertTrue(hangmanGame.getCurrentState().contains("a"), "actual");
+        assertTrue(hangmanGame.getCurrentState().contains("a"));
     }
 
     @Test
@@ -49,9 +53,9 @@ public class HangManPlayerTest {
     private void provideSimulatedInput(String input) {
     }
 
-    //Restore original System.in after each test
-    @AfterEach
-    public void restoreSystemIn() {
-        System.getIn(originalSystemIn);
-    }
+//    //Restore original System.in after each test
+//    @AfterEach
+//    public void restoreSystemIn() {
+//        System.getIn(originalSystemIn);
+//    }
 }
