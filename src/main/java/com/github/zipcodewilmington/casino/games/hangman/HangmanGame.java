@@ -187,6 +187,7 @@ public class HangmanGame implements  GameInterface {
 
     public void startNewGame(String hangman) {
     }
+
 }
 
 
