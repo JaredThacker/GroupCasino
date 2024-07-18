@@ -1,16 +1,19 @@
 package com.github.zipcodewilmington.casino.games.numberguess;
 
+import com.github.zipcodewilmington.casino.GameInterface;
+import com.github.zipcodewilmington.casino.PlayerInterface;
+
 import java.util.Random;
 import java.util.Scanner;
 
 /**
  * Created by leon on 7/21/2020.
  */
-public class NumberGuessGame {
+public class NumberGuessGame implements GameInterface {
 
     Scanner scanner = new Scanner(System.in);
     Random numGen = new Random(System.currentTimeMillis());
-    Integer guessCount;
+    Integer guessCount = 0;
     Integer userGuess;
     Integer randomNum;
 
@@ -22,20 +25,19 @@ public class NumberGuessGame {
         return userGuess == randomNum;
     }
 
-    public void playGame(){
-        String playAgain = "y";
-        do {
-            gameLogic();
-            System.out.println("Would you like to play again? y/n");
-            playAgain = scanner.nextLine().toLowerCase();
-        } while (playAgain.equals("y"));
-    }
 
     public void gameLogic(){
+
+        randomNum = generateNew();
+
         while(true){
-            userGuess = scanner.nextInt();
-            randomNum = generateNew();
+
             guessCount++;
+
+            System.out.println("Pick a number between 1 and 20");
+
+            userGuess = scanner.nextInt();
+
             if(userGuess == randomNum){
                 System.out.println("You win");
                 break;
@@ -52,4 +54,32 @@ public class NumberGuessGame {
             }
         }
     }
+
+    @Override
+    public void run() {
+        String playAgain = "y";
+        do {
+            gameLogic();
+            System.out.println("Would you like to play again? y/n");
+            playAgain = scanner.nextLine().toLowerCase();
+        } while (playAgain.equals("y"));
+    }
+
+    public static void main(String[] args) {
+        NumberGuessGame numberGuessGame = new NumberGuessGame();
+
+        numberGuessGame.run();
+    }
+
+    @Override
+    public void add(PlayerInterface player) {
+
+    }
+
+    @Override
+    public void remove(PlayerInterface player) {
+
+    }
+
+
 }
