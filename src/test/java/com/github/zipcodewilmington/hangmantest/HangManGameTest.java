@@ -25,6 +25,7 @@ public class HangManGameTest {
         hangmanGame.startNewGame("railroad");
         assertTrue(hangmanGame.guessCharacter('a'), "'a' should be a correct guess");
         assertEquals("_ a _ _ _ _ a _", hangmanGame.getCurrentState(), "Current word should reveal 'a' indexes");
+
     }
 
     @Test
