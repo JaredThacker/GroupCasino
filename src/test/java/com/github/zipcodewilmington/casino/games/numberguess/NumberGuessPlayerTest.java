@@ -8,9 +8,4 @@ import java.util.Scanner;
 import static org.junit.Assert.*;
 
 public class NumberGuessPlayerTest {
-
-    @Test
-    public void guessNum() {
-
-    }
 }
