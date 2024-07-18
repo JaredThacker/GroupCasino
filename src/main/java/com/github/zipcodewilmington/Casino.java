@@ -42,7 +42,12 @@ public class Casino implements Runnable {
                         play(new NumberGuessGame(), new NumberGuessPlayer());
                     } else if (gameSelectionInput.equals("FLIPCOIN")) {
                         play(new FlipCoinGame(), new CoinFlipPlayer());
-                    } else {
+                    } else if (gameSelectionInput.equals("HANGMAN")) {
+                        play(new HangmanGame(), new HangmanPlayer());
+                    }else if (gameSelectionInput.equals("BLACKJACK")) {
+                        play(new BlackJack(), new BlackJackPlayer());
+                    }
+                    else {
                         // TODO - implement better exception handling
                         String errorMessage = "[ %s ] is an invalid game selection";
                         throw new RuntimeException(String.format(errorMessage, gameSelectionInput));
@@ -74,7 +79,7 @@ public class Casino implements Runnable {
         return console.getStringInput(new StringBuilder()
                 .append("Welcome to the Game Selection Dashboard!")
                 .append("\nFrom here, you can select any of the following options:")
-                .append("\n\t[ SLOTS ], [ NUMBERGUESS ], [ FLIPCOIN ]")
+                .append("\n\t[ SLOTS ], [ NUMBERGUESS ], [ FLIPCOIN ], [ HANGMAN ], [ BLACKJACK ] ")
                 .toString());
     }
 
