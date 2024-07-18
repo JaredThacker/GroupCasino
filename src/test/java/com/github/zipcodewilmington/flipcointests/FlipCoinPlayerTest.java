@@ -1,5 +1,6 @@
 package com.github.zipcodewilmington.flipcointests;
 
+import com.github.zipcodewilmington.casino.games.coinflip.CoinFlipPlayer;
 import org.junit.Assert;
 import org.junit.Test;
 

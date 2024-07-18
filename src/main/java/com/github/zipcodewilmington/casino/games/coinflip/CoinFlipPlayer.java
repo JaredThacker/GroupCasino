@@ -1,9 +1,7 @@
-package com.github.zipcodewilmington.flipcointests;
+package com.github.zipcodewilmington.casino.games.coinflip;
 
 import com.github.zipcodewilmington.casino.CasinoAccount;
 import com.github.zipcodewilmington.casino.PlayerInterface;
-
-import java.util.Scanner;
 
 public class CoinFlipPlayer implements PlayerInterface {
 
@@ -11,6 +9,7 @@ public class CoinFlipPlayer implements PlayerInterface {
 
     public int coinFlipPlayerGuess(int guess,int heads, int tails) {
         if(guess == 1){
+
             return tails;
 
         }
