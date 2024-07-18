@@ -13,7 +13,6 @@ public class NumberGuessGame implements GameInterface {
 
     Scanner scanner = new Scanner(System.in);
     Random numGen = new Random(System.currentTimeMillis());
-    Integer guessCount = 0;
     Integer userGuess;
     Integer randomNum;
 
@@ -27,6 +26,8 @@ public class NumberGuessGame implements GameInterface {
 
 
     public void gameLogic(){
+
+        Integer guessCount = 0;
 
         randomNum = generateNew();
 
@@ -65,11 +66,12 @@ public class NumberGuessGame implements GameInterface {
 
     @Override
     public void run() {
-        String playAgain;
+        Scanner scan = new Scanner(System.in);
+        String playAgain = "y";
         do {
             gameLogic();
             System.out.println("Would you like to play again? y/n");
-            playAgain = scanner.nextLine().toLowerCase();
+            playAgain = scan.nextLine().toLowerCase();
         } while (playAgain.equals("y"));
     }
 
