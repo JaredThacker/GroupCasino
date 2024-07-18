@@ -1,8 +1,11 @@
 package com.github.zipcodewilmington.casino.games.coinflip;
 
+import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.PlayerInterface;
+
 import java.util.Random;
 
-public class FlipCoinGame {
+public class FlipCoinGame implements PlayerInterface {
     int heads = 2;
     int tails = 1;
     static Random random = new Random();
@@ -27,9 +30,24 @@ public class FlipCoinGame {
 
     public boolean playerWinsOrLose() {
 
-
+//        CoinFlipPlayer coinFlipPlayer = new CoinFlipPlayer;
+//
+//    if(flipCoin(2,1) )
         return false;
     }
+
+
+    @Override
+    public CasinoAccount getArcadeAccount() {
+        return null;
+    }
+
+    @Override
+    public <SomeReturnType> SomeReturnType play() {
+        return null;
+    }
+
+
 
 
 
@@ -47,6 +65,7 @@ public class FlipCoinGame {
         System.out.println("Type 2 for Heads or 1 for Tails. Choose wisely...");
 
     }
+
 
 
 }
