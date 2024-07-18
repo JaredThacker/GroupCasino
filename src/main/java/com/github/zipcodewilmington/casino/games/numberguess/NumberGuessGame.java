@@ -30,6 +30,14 @@ public class NumberGuessGame implements GameInterface {
 
         randomNum = generateNew();
 
+        System.out.println("\n" +
+                " __   __   __  __   __    __   ______   ______   ______       ______   __  __   ______   ______   ______    \n" +
+                "/\\ \"-.\\ \\ /\\ \\/\\ \\ /\\ \"-./  \\ /\\  == \\ /\\  ___\\ /\\  == \\     /\\  ___\\ /\\ \\/\\ \\ /\\  ___\\ /\\  ___\\ /\\  ___\\   \n" +
+                "\\ \\ \\-.  \\\\ \\ \\_\\ \\\\ \\ \\-./\\ \\\\ \\  __< \\ \\  __\\ \\ \\  __<     \\ \\ \\__ \\\\ \\ \\_\\ \\\\ \\  __\\ \\ \\___  \\\\ \\___  \\  \n" +
+                " \\ \\_\\\\\"\\_\\\\ \\_____\\\\ \\_\\ \\ \\_\\\\ \\_____\\\\ \\_____\\\\ \\_\\ \\_\\    \\ \\_____\\\\ \\_____\\\\ \\_____\\\\/\\_____\\\\/\\_____\\ \n" +
+                "  \\/_/ \\/_/ \\/_____/ \\/_/  \\/_/ \\/_____/ \\/_____/ \\/_/ /_/     \\/_____/ \\/_____/ \\/_____/ \\/_____/ \\/_____/ \n" +
+                "                                                                                                            \n");
+
         while(true){
 
             guessCount++;
@@ -57,7 +65,7 @@ public class NumberGuessGame implements GameInterface {
 
     @Override
     public void run() {
-        String playAgain = "y";
+        String playAgain;
         do {
             gameLogic();
             System.out.println("Would you like to play again? y/n");
