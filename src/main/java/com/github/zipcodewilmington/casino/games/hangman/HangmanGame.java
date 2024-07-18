@@ -184,6 +184,10 @@ public class HangmanGame implements  GameInterface {
 
         scanner.close();
     }
+
+    public void startNewGame(String hangman) {
+    }
+
 }
 
 
