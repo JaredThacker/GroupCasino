@@ -5,6 +5,7 @@ import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
 import java.util.Random;
+import java.util.Scanner;
 
 public class FlipCoinGame implements GameInterface {
     int heads = 2;
@@ -17,15 +18,55 @@ public class FlipCoinGame implements GameInterface {
 //        System.out.println("Type 2 for Heads or 1 for Tails. Choose wisely...");
 
     public static int flipCoin(int heads, int tails) {
+        Scanner scanner = new Scanner(System.in);
 
+        System.out.println("\n" +
+                " _____  _  _          ____          _         \n" +
+                "|___  || |(_)  __ _  |___ \\   ___  (_)  __ _  \n" +
+                "   _| || || | / _` |     | | / _ \\ | | / _` | \n" +
+                "  |_  || || || (_| |  ___| || (_) || || | | | \n" +
+                "    |_||_||_| \\__, | |____/  \\___/ |_||_| |_| \n" +
+                "                 |_|                          \n");
+
+        System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
+        System.out.println("How Much would you like to bet?");
+        int userInput = scanner.nextInt();
+        System.out.println("Type 2 for Heads or 1 for Tails. Choose wisely...");
+
+        int userInput2 = scanner.nextInt();
         int randNumber = random.nextInt(2)+1;
-        if(randNumber >1){
-            System.out.println("The coin landed on Heads!");
-        return heads;
-
+        if(userInput2 == 1){
+            System.out.println("You guessed Tails, I hope you ain't fail.");
+//            return userInput;
         }
-        System.out.println("The coin landed on Tails!");
-      return tails;
+        else if(userInput2 ==2) {
+            System.out.println("You guessed Heads for the bread.");
+//            return userInput;
+        }
+        else return tails;
+
+
+
+////        if(randNumber >1){
+////            System.out.println("The coin landed on Heads!");
+//        return heads;
+//
+//        }
+//        System.out.println("The coin landed on Tails!");
+
+
+        if(randNumber == 1) {
+            System.out.println("The coin landed on Tails!");
+
+            }
+        else{ System.out.println("The coin landed on Heads.");
+        }
+        if (userInput2 == randNumber){
+            System.out.println("Bingo! Your guess was correct! You won " + "$"+ (userInput * 2));
+            return userInput;
+        }
+        System.out.println("Sorry wrong guess :(");
+        return tails;
 
     }
 
@@ -45,17 +86,19 @@ public class FlipCoinGame implements GameInterface {
 
 
     public static void main(String[] args) {
-        System.out.println("\n" +
-                " _____  _  _          ____          _         \n" +
-                "|___  || |(_)  __ _  |___ \\   ___  (_)  __ _  \n" +
-                "   _| || || | / _` |     | | / _ \\ | | / _` | \n" +
-                "  |_  || || || (_| |  ___| || (_) || || | | | \n" +
-                "    |_||_||_| \\__, | |____/  \\___/ |_||_| |_| \n" +
-                "                 |_|                          \n");
 
-                System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
-        System.out.println("How Much would you like to bet?");
-        System.out.println("Type 2 for Heads or 1 for Tails. Choose wisely...");
+        flipCoin(1,2);
+//        System.out.println("\n" +
+//                " _____  _  _          ____          _         \n" +
+//                "|___  || |(_)  __ _  |___ \\   ___  (_)  __ _  \n" +
+//                "   _| || || | / _` |     | | / _ \\ | | / _` | \n" +
+//                "  |_  || || || (_| |  ___| || (_) || || | | | \n" +
+//                "    |_||_||_| \\__, | |____/  \\___/ |_||_| |_| \n" +
+//                "                 |_|                          \n");
+//
+//                System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
+//        System.out.println("How Much would you like to bet?");
+//        System.out.println("Type 2 for Heads or 1 for Tails. Choose wisely...");
 
     }
 
