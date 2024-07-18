@@ -12,6 +12,7 @@ public class HangmanGame {
 
     public String guessCharacter(char a) {
         return null;
+
     }
 
     public String guessWord(String railroad) {
