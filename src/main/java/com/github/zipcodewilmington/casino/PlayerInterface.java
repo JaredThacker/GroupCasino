@@ -14,8 +14,6 @@ public interface PlayerInterface {
     default void playGame() {
     }
 
-
-
     /**
      * Defines how a specific implementation of `PlayerInterface` plays their respective game.
      * @param <SomeReturnType> specify any return type you would like here

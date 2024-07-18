@@ -15,8 +15,4 @@ public class NumberGuessGameTest {
         Integer ranNum = numGen.nextInt(20) + 1;
         Assert.assertTrue(ranNum >= 1 && ranNum <= 20);
     }
-
-    @Test
-    public void guessCheck() {
-    }
 }
