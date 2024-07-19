@@ -1,62 +1,88 @@
 package com.github.zipcodewilmington.hangmantest;
 
 import com.github.zipcodewilmington.casino.games.hangman.HangmanGame;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-
-import static org.junit.Assert.*;
 
 public class HangManGameTest {
 
     private HangmanGame hangmanGame;
 
-    @BeforeEach
+    @Before
     public void setup() {
         hangmanGame = new HangmanGame();
     }
 
     @Test
-    public void testStartNewGame() {
-        hangmanGame.startNewGame("astronaut");
-        assertEquals("_ _ _ _ _ _ _ _ _", hangmanGame.getCurrentState(), "Initial state should be word indexes for 'astronaut'");
-    }
-
-    @Test
     public void testGuessCharacterCorrect() {
-        hangmanGame.startNewGame("railroad");
-        assertEquals("_ a _ _ _ _ a _", hangmanGame.getCurrentState(), "Current word should reveal 'a' indexes");
-
+        char correctChar = getValidCharacter(); // Fetch a valid character from solution
+        boolean isGuessCorrect = hangmanGame.guessCharacter(correctChar);
+        Assert.assertTrue(isGuessCorrect);
     }
 
     @Test
     public void testGuessCharacterIncorrect() {
-        hangmanGame.startNewGame("railroad");
-        assertEquals("_ _ _ _ _ _ _ _", hangmanGame.getCurrentState(), "Current word should be unchanged");
+        char incorrectChar = getInvalidCharacter(); // Fetch an invalid character not in solution
+        boolean isGuessIncorrect = hangmanGame.guessCharacter(incorrectChar);
+        Assert.assertFalse(isGuessIncorrect);
     }
 
     @Test
     public void testGuessWordCorrect() {
-        hangmanGame.startNewGame("railroad");
-        assertEquals("r a i l r o a d", hangmanGame.getCurrentState(), "Current word should reveal the entire word");
+        String correctWord = hangmanGame.getSolution();
+        boolean isGuessCorrect = hangmanGame.guessWord(correctWord);
+        Assert.assertTrue(isGuessCorrect);
     }
 
     @Test
     public void testGuessWordIncorrect() {
-        hangmanGame.startNewGame("railroad");
-        assertEquals("_ _ _ _ _ _ _ _", hangmanGame.getCurrentState(), "Current word should be unchanged");
+        String incorrectWord = "incorrect"; // Assuming "incorrect" is not the solution
+        boolean isGuessCorrect = hangmanGame.guessWord(incorrectWord);
+        Assert.assertFalse(isGuessCorrect);
     }
 
     @Test
-    public void testMaxAttemptsReached() {
-        hangmanGame.startNewGame("railroad");
-        hangmanGame.guessCharacter('p');
-        hangmanGame.guessCharacter('t');
-        hangmanGame.guessCharacter('x');
-        hangmanGame.guessCharacter('z');
-        hangmanGame.guessCharacter('b');
-        hangmanGame.guessCharacter('c');
-        hangmanGame.guessCharacter('q');
-        hangmanGame.guessCharacter('u');
-        assertEquals("_ _ _ _ _ _ _ _", hangmanGame.getCurrentState(), "Current state should remain unchanged after max attempts");
+    public void testIsGameOverCorrectWordGuessed() {
+        for (char c : hangmanGame.getSolution().toCharArray()) {
+            hangmanGame.guessCharacter(c);
+        }
+        Assert.assertTrue(hangmanGame.isGameOver());
+    }
+
+    @Test
+    public void testIsWordGuessedCorrect() {
+        for (char c : hangmanGame.getSolution().toCharArray()) {
+            hangmanGame.guessCharacter(c);
+        }
+        Assert.assertTrue(hangmanGame.isWordGuessed());
+    }
+
+    @Test
+    public void testIsWordGuessedIncorrect() {
+        hangmanGame.guessCharacter('z'); // Making an incorrect guess
+        Assert.assertFalse(hangmanGame.isWordGuessed());
+    }
+
+    @Test
+    public void testGetCurrentState() {
+        String currentState = hangmanGame.getCurrentState();
+        Assert.assertNotNull(currentState);
+        Assert.assertEquals(hangmanGame.getSolution().length() * 2 - 1, currentState.length());
+    }
+
+    private char getValidCharacter() {
+        String solution = hangmanGame.getSolution();
+        return solution.charAt(0); // Assuming first character is always a valid guess
+    }
+
+    private char getInvalidCharacter() {
+        // Find a character that is not in the solution
+        String solution = hangmanGame.getSolution();
+        char invalidChar = 'z';
+        while (solution.indexOf(invalidChar) >= 0) {
+            invalidChar++;
+        }
+        return invalidChar;
     }
 }
