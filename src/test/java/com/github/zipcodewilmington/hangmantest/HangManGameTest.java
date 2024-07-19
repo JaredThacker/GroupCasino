@@ -1,47 +1,88 @@
 package com.github.zipcodewilmington.hangmantest;
 
 import com.github.zipcodewilmington.casino.games.hangman.HangmanGame;
-import com.github.zipcodewilmington.casino.games.hangman.HangmanPlayer;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeEach;
-
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
-
-import static org.junit.Assert.*;
 
 public class HangManGameTest {
 
     private HangmanGame hangmanGame;
-    private HangmanPlayer hangmanPlayer;
-    private InputStream originalSystemIn;
 
-    @BeforeEach
+    @Before
     public void setup() {
         hangmanGame = new HangmanGame();
-        hangmanPlayer = new HangmanPlayer(hangmanGame);
-        originalSystemIn = System.in; // Save original System.in
     }
 
     @Test
-    public void testPlayerGuessCharacter() {
-        provideSimulatedInput("1\na\n");
-        hangmanGame.startNewGame("hangman");
-        hangmanPlayer.playGame();
-        assertEquals("Correct guess: a", hangmanGame.getCurrentState().toString().trim(),
-                "Player should correctly guess character 'a'");
+    public void testGuessCharacterCorrect() {
+        char correctChar = getValidCharacter(); // Fetch a valid character from solution
+        boolean isGuessCorrect = hangmanGame.guessCharacter(correctChar);
+        Assert.assertTrue(isGuessCorrect);
     }
 
     @Test
-    public void testPlayerGuessWord() {
-        provideSimulatedInput("2\ntestword\n");
-        hangmanGame.startNewGame("testword");
-        hangmanPlayer.playGame();
-        assertEquals("You guessed the word: testword", hangmanGame.getCurrentState().toString().trim(),
-                "Player should correctly guess word 'testword'");
+    public void testGuessCharacterIncorrect() {
+        char incorrectChar = getInvalidCharacter(); // Fetch an invalid character not in solution
+        boolean isGuessIncorrect = hangmanGame.guessCharacter(incorrectChar);
+        Assert.assertFalse(isGuessIncorrect);
     }
 
-    private void provideSimulatedInput(String input) {
-        System.setIn(new ByteArrayInputStream(input.getBytes()));
+    @Test
+    public void testGuessWordCorrect() {
+        String correctWord = hangmanGame.getSolution();
+        boolean isGuessCorrect = hangmanGame.guessWord(correctWord);
+        Assert.assertTrue(isGuessCorrect);
+    }
+
+    @Test
+    public void testGuessWordIncorrect() {
+        String incorrectWord = "incorrect"; // Assuming "incorrect" is not the solution
+        boolean isGuessCorrect = hangmanGame.guessWord(incorrectWord);
+        Assert.assertFalse(isGuessCorrect);
+    }
+
+    @Test
+    public void testIsGameOverCorrectWordGuessed() {
+        for (char c : hangmanGame.getSolution().toCharArray()) {
+            hangmanGame.guessCharacter(c);
+        }
+        Assert.assertTrue(hangmanGame.isGameOver());
+    }
+
+    @Test
+    public void testIsWordGuessedCorrect() {
+        for (char c : hangmanGame.getSolution().toCharArray()) {
+            hangmanGame.guessCharacter(c);
+        }
+        Assert.assertTrue(hangmanGame.isWordGuessed());
+    }
+
+    @Test
+    public void testIsWordGuessedIncorrect() {
+        hangmanGame.guessCharacter('z'); // Making an incorrect guess
+        Assert.assertFalse(hangmanGame.isWordGuessed());
+    }
+
+    @Test
+    public void testGetCurrentState() {
+        String currentState = hangmanGame.getCurrentState();
+        Assert.assertNotNull(currentState);
+        Assert.assertEquals(hangmanGame.getSolution().length() * 2 - 1, currentState.length());
+    }
+
+    private char getValidCharacter() {
+        String solution = hangmanGame.getSolution();
+        return solution.charAt(0); // Assuming first character is always a valid guess
+    }
+
+    private char getInvalidCharacter() {
+        // Find a character that is not in the solution
+        String solution = hangmanGame.getSolution();
+        char invalidChar = 'z';
+        while (solution.indexOf(invalidChar) >= 0) {
+            invalidChar++;
+        }
+        return invalidChar;
     }
 }
