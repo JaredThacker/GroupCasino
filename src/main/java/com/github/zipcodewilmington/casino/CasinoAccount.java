@@ -35,7 +35,4 @@ public class CasinoAccount {
         this.accountPassword = accountPassword;
     }
 
-
-
-
 }
