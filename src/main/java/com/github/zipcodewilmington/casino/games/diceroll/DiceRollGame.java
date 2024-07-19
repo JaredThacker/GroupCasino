@@ -11,10 +11,9 @@ public class DiceRollGame implements GameInterface {
     private static int numberOfDie;
     static Random random = new Random();
 
-
-//    public DiceRollGame(int numberOfDie){
-//        this.numberOfDie = 2;
-//    }
+    public DiceRollGame(int numberOfDie){
+        this.numberOfDie = 2;
+    }
 
     public static int rollDie(int numberOfDie) {
 
@@ -60,14 +59,6 @@ public class DiceRollGame implements GameInterface {
 
 
 
-
-
-
-
-
-
-
-
     }
 
     public static void main(String[] args){
@@ -75,7 +66,6 @@ public class DiceRollGame implements GameInterface {
 //     Integer  toss = die.rollDie();
 //        System.out.println(toss);
         playDiceGame();
-
     }
 
     @Override
