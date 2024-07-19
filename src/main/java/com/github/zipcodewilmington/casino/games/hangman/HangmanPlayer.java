@@ -59,12 +59,6 @@ public class HangmanPlayer implements PlayerInterface {
                 System.out.println("Invalid choice. Please enter '1' or '2'.");
             }
         }
-
-        if (hangmanGame.isWordGuessed()) {
-            System.out.println("Congratulations! You guessed the word: " + hangmanGame.getSolution());
-        } else {
-            System.out.println("You lost! The word was: " + hangmanGame.getSolution());
-        }
     }
 
     @Override
