@@ -12,6 +12,11 @@ public class CasinoAccount {
     public CasinoAccount(String accountName, String accountPassword) {
         this.accountName = accountName;
         this.accountPassword = accountPassword;
+
+    }
+
+    public CasinoAccount() {
+
     }
 
     public String getAccountName() {
@@ -30,4 +35,7 @@ public class CasinoAccount {
         this.accountPassword = accountPassword;
     }
 
+
+    public CasinoAccount() {
+    }
 }

@@ -1,5 +1,6 @@
 package com.github.zipcodewilmington.casino.games.numberguess;
 
+import com.github.zipcodewilmington.casino.CasinoAccount;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
@@ -75,6 +76,11 @@ public class NumberGuessGame implements GameInterface {
                 " \\ \\_____\\\\ \\_\\ \\_\\\\ \\_\\ \\ \\_\\\\ \\_____\\    \\ \\_____\\\\ \\__|  \\ \\_____\\\\ \\_\\ \\_\\ \n" +
                 "  \\/_____/ \\/_/\\/_/ \\/_/  \\/_/ \\/_____/     \\/_____/ \\/_/    \\/_____/ \\/_/ /_/ \n" +
                 "                                                                               \n");
+    }
+
+    @Override
+    public void addCasinoAccount(CasinoAccount casinoAccount) {
+
     }
 
     public static void main(String[] args) {

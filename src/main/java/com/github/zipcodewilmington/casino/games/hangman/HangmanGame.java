@@ -1,5 +1,6 @@
 package com.github.zipcodewilmington.casino.games.hangman;
 
+import com.github.zipcodewilmington.casino.CasinoAccount;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
@@ -205,6 +206,11 @@ public class HangmanGame implements  GameInterface {
     }
 
         scanner.close();
+    }
+
+    @Override
+    public void addCasinoAccount(CasinoAccount casinoAccount) {
+
     }
 
     public void startNewGame(String hangman) {

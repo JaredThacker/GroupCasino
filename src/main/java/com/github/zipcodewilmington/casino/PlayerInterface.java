@@ -17,6 +17,8 @@ public interface PlayerInterface {
     default void playGame() {
     }
 
+    CasinoAccount getArcadeAccount();
+
     /**
      * Defines how a specific implementation of `PlayerInterface` plays their respective game.
      * @param <SomeReturnType> specify any return type you would like here
@@ -24,5 +26,5 @@ public interface PlayerInterface {
      */
     <SomeReturnType> SomeReturnType play();
 
-    void addWallet(Wallet wallet);
+    void addWallet(Wallet wallet);//
 }

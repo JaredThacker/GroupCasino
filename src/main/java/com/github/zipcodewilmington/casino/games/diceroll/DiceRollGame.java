@@ -1,5 +1,6 @@
 package com.github.zipcodewilmington.casino.games.diceroll;
 
+import com.github.zipcodewilmington.casino.CasinoAccount;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
@@ -131,6 +132,11 @@ public class DiceRollGame implements GameInterface {
                 "   ░     ░  ░ ░         ░  ░   ░  ░   ░  ░         ░       ░  ░       ░      ░  ░   ░  ░   ░  ░\n" +
                 " ░          ░                                                                                  \n");
 
+
+    }
+
+    @Override
+    public void addCasinoAccount(CasinoAccount casinoAccount) {
 
     }
 }

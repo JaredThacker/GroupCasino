@@ -51,7 +51,7 @@ public class Casino implements Runnable {
                     } else if (gameSelectionInput.equals("HANGMAN")) {
                         play(new HangmanGame(), new HangmanPlayer());
                     }else if (gameSelectionInput.equals("BLACKJACK")) {
-                        play(new BlackJack(), new BlackJackPlayer());
+//                        play(new BlackJack(), new BlackJackPlayer());
                     } else if (gameSelectionInput.equals("DICEGAME")) {
                         play(new DiceRollGame(), new DiceRollPlayer());
                     } else {                        // TODO - implement better exception handling
