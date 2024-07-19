@@ -20,4 +20,8 @@ public interface GameInterface extends Runnable {
      * specifies how the game will run
      */
     void run();
+
+//    void addCAM(CasinoAccountManager casinoAccountManager);
+//
+//    void addPlayer(String username, String password);
 }
