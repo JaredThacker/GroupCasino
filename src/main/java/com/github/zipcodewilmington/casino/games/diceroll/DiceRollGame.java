@@ -11,6 +11,7 @@ public class DiceRollGame implements GameInterface {
     private static int numberOfDie;
     static Random random = new Random();
 
+
 //    public DiceRollGame(int numberOfDie){
 //        this.numberOfDie = 2;
 //    }
