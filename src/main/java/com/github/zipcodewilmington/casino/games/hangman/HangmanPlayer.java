@@ -23,11 +23,11 @@ public class HangmanPlayer implements PlayerInterface {
         this.arcadeAccount = new CasinoAccount();
     }
 
-    @Override
-    public CasinoAccount getArcadeAccount() {
-
-        return arcadeAccount;
-    }
+//    @Override
+//    public CasinoAccount getArcadeAccount() {
+//
+//        return arcadeAccount;
+//    }
 
     @Override
     public void playGame() {
