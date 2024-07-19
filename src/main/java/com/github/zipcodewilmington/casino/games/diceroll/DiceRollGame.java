@@ -110,4 +110,9 @@ public class DiceRollGame implements GameInterface {
                 " ░          ░                                                                                  \n");
 
     }
+
+    @Override
+    public void addCasinoAccount(CasinoAccount casinoAccount) {
+
+    }
 }
