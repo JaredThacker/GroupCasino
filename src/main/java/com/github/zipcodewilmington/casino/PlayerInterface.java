@@ -1,5 +1,7 @@
 package com.github.zipcodewilmington.casino;
 
+import com.github.zipcodewilmington.casino.games.wallet.Wallet;
+
 /**
  * Created by leon on 7/21/2020.
  * All players of a game should abide by `PlayerInterface`.
@@ -14,12 +16,12 @@ public interface PlayerInterface {
     default void playGame() {
     }
 
-
-
     /**
      * Defines how a specific implementation of `PlayerInterface` plays their respective game.
      * @param <SomeReturnType> specify any return type you would like here
      * @return whatever return value you would like
      */
     <SomeReturnType> SomeReturnType play();
+
+    void addWallet(Wallet wallet);
 }

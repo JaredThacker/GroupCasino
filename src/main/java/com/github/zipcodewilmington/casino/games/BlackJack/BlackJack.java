@@ -1,17 +1,22 @@
 package com.github.zipcodewilmington.casino.games.BlackJack;
 
+import com.github.zipcodewilmington.casino.GameInterface;
+import com.github.zipcodewilmington.casino.PlayerInterface;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-public class BlackJack {
-    private int playerMoney;
-    private int sizeOfPot;
-    private Scanner scanner;
-    private List<Card> deck;
-    private List<Card> playerHand;
-    private List<Card> dealerHand;
+public class BlackJack implements GameInterface {
+    public int playerMoney;
+    public int sizeOfPot;
+    public Scanner scanner;
+    public List<Card> deck;
+    public List<Card> playerHand;
+    public List<Card> dealerHand;
+    public PlayerInterface player;
+
 
     public BlackJack(int initialMoney) {
         this.playerMoney = initialMoney;
@@ -30,6 +35,10 @@ public class BlackJack {
         this.deck = new ArrayList<>(deck);
         this.playerHand = new ArrayList<>();
         this.dealerHand = new ArrayList<>();
+    }
+
+    public BlackJack() {
+
     }
 
     public void playBlackJack() {
@@ -187,7 +196,7 @@ public class BlackJack {
         return newDeck;
     }
 
-    private void displayHand(List<Card> hand, boolean hideFirstCard) {
+    public void displayHand(List<Card> hand, boolean hideFirstCard) {
         for (int i = 0; i < hand.size(); i++) {
             if (i == 0 && hideFirstCard) {
                 System.out.println("[Hidden]");
@@ -225,7 +234,7 @@ public class BlackJack {
         hit(dealerHand);
     }
 
-    private void displayInitialHands() {
+    public void displayInitialHands() {
         // System.out.println("\nYour hand: ");
         // displayHand(playerHand, false);
         System.out.println("\nDealer's hand: ");
@@ -233,19 +242,19 @@ public class BlackJack {
         //System.out.println("Total value of dealers hand: " + getHandValue(dealerHand));
     }
 
-    private boolean askToPlayAgain() {
+    public boolean askToPlayAgain() {
         System.out.print("\nDo you want to play again? (y/n): ");
         String playChoice = scanner.nextLine().toLowerCase();
         return "y".equals(playChoice);
     }
 
-    private void hit(List<Card> hand) {
+    public void hit(List<Card> hand) {
         if (!deck.isEmpty()) {
             hand.add(deck.remove(0));
         }
     }
 
-    private void doubleDown() {
+    public void doubleDown() {
         if (playerMoney >= sizeOfPot) {
             addToPot(sizeOfPot / 2);
             hit(playerHand);
@@ -257,20 +266,37 @@ public class BlackJack {
         }
     }
 
+    @Override
+    public void add(PlayerInterface player) {
+        this.player = player;
+
+    }
+
+    @Override
+    public void remove(PlayerInterface player) {
+
+    }
+
+    @Override
+    public void run() {
+        BlackJack blackjack = new  BlackJack(playerMoney, deck);
+
+    }
+
     public enum Suit { CLUBS, DIAMONDS, HEARTS, SPADES }
 
     public enum Rank {
         TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(10),
         JACK(10), QUEEN(10), KING(10), ACE(11);
 
-        private final int value;
+        public final int value;
         Rank(int value) { this.value = value; }
         public int getValue() { return value; }
     }
 
     public static class Card {
-        private final Rank rank;
-        private final Suit suit;
+        public final Rank rank;
+        public final Suit suit;
 
         public Card(Rank rank, Suit suit) {
             this.rank = rank;
