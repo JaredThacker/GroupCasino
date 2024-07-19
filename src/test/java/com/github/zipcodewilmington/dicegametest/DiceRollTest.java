@@ -8,10 +8,10 @@ public class DiceRollTest {
     @Test
     public void diceRollTest(){
         //Given
-        DiceRollGame dice = new DiceRollGame();
+        DiceRollGame dice = new DiceRollGame(2);
 
         //When
-        int actual = dice.rollDie();
+        int actual = dice.rollDie(2);
 
         //Then
         Assert.assertTrue(actual >= 2);
