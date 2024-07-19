@@ -8,6 +8,10 @@ public class DiceRollTest {
     @Test
     public void diceRollTest(){
         //Given
+        DiceRollGame dice = new DiceRollGame(2);
+
+        //When
+        int actual = dice.rollDie(2);
         DiceRollGame dice = new DiceRollGame();
 
         //When
