@@ -207,4 +207,9 @@ public class FlipCoinGame implements GameInterface {
 //                "    |_||_||_| \\__, | |____/  \\___/ |_||_| |_| \n" +
 //                "                 |_|                          \n");
     }
+
+    @Override
+    public void addCasinoAccount(CasinoAccount casinoAccount) {
+
+    }
 }
