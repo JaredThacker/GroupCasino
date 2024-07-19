@@ -15,6 +15,10 @@ public class CasinoAccount {
 
     }
 
+    public CasinoAccount() {
+
+    }
+
     public String getAccountName() {
         return accountName;
     }

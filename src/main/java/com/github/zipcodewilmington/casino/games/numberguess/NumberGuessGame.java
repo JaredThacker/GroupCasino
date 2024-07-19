@@ -20,11 +20,6 @@ public class NumberGuessGame implements GameInterface {
         return numGen.nextInt(20) + 1;
     }
 
-    public Boolean guessCheck(){
-        return userGuess == randomNum;
-    }
-
-
     public void gameLogic(){
 
         Integer guessCount = 0;
@@ -73,6 +68,13 @@ public class NumberGuessGame implements GameInterface {
             System.out.println("Would you like to play again? y/n");
             playAgain = scan.nextLine().toLowerCase();
         } while (playAgain.equals("y"));
+        System.out.println("\n" +
+                " ______   ______   __    __   ______       ______   __   __ ______   ______    \n" +
+                "/\\  ___\\ /\\  __ \\ /\\ \"-./  \\ /\\  ___\\     /\\  __ \\ /\\ \\ / //\\  ___\\ /\\  == \\   \n" +
+                "\\ \\ \\__ \\\\ \\  __ \\\\ \\ \\-./\\ \\\\ \\  __\\     \\ \\ \\/\\ \\\\ \\ \\'/ \\ \\  __\\ \\ \\  __<   \n" +
+                " \\ \\_____\\\\ \\_\\ \\_\\\\ \\_\\ \\ \\_\\\\ \\_____\\    \\ \\_____\\\\ \\__|  \\ \\_____\\\\ \\_\\ \\_\\ \n" +
+                "  \\/_____/ \\/_/\\/_/ \\/_/  \\/_/ \\/_____/     \\/_____/ \\/_/    \\/_____/ \\/_/ /_/ \n" +
+                "                                                                               \n");
     }
 
     public static void main(String[] args) {
@@ -90,6 +92,4 @@ public class NumberGuessGame implements GameInterface {
     public void remove(PlayerInterface player) {
 
     }
-
-
 }

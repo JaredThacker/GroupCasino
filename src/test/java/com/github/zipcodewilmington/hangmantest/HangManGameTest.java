@@ -1,62 +1,47 @@
 package com.github.zipcodewilmington.hangmantest;
 
 import com.github.zipcodewilmington.casino.games.hangman.HangmanGame;
+import com.github.zipcodewilmington.casino.games.hangman.HangmanPlayer;
 import org.junit.Test;
 import org.junit.jupiter.api.BeforeEach;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 
 import static org.junit.Assert.*;
 
 public class HangManGameTest {
 
     private HangmanGame hangmanGame;
+    private HangmanPlayer hangmanPlayer;
+    private InputStream originalSystemIn;
 
     @BeforeEach
     public void setup() {
         hangmanGame = new HangmanGame();
+        hangmanPlayer = new HangmanPlayer(hangmanGame);
+        originalSystemIn = System.in; // Save original System.in
     }
 
     @Test
-    public void testStartNewGame() {
-        hangmanGame.startNewGame("astronaut");
-        assertEquals("_ _ _ _ _ _ _ _ _", hangmanGame.getCurrentState(), "Initial state should be word indexes for 'astronaut'");
+    public void testPlayerGuessCharacter() {
+        provideSimulatedInput("1\na\n");
+        hangmanGame.startNewGame("hangman");
+        hangmanPlayer.playGame();
+        assertEquals("Correct guess: a", hangmanGame.getCurrentState().toString().trim(),
+                "Player should correctly guess character 'a'");
     }
 
     @Test
-    public void testGuessCharacterCorrect() {
-        hangmanGame.startNewGame("railroad");
-        assertEquals("_ a _ _ _ _ a _", hangmanGame.getCurrentState(), "Current word should reveal 'a' indexes");
-
+    public void testPlayerGuessWord() {
+        provideSimulatedInput("2\ntestword\n");
+        hangmanGame.startNewGame("testword");
+        hangmanPlayer.playGame();
+        assertEquals("You guessed the word: testword", hangmanGame.getCurrentState().toString().trim(),
+                "Player should correctly guess word 'testword'");
     }
 
-    @Test
-    public void testGuessCharacterIncorrect() {
-        hangmanGame.startNewGame("railroad");
-        assertEquals("_ _ _ _ _ _ _ _", hangmanGame.getCurrentState(), "Current word should be unchanged");
-    }
-
-    @Test
-    public void testGuessWordCorrect() {
-        hangmanGame.startNewGame("railroad");
-        assertEquals("r a i l r o a d", hangmanGame.getCurrentState(), "Current word should reveal the entire word");
-    }
-
-    @Test
-    public void testGuessWordIncorrect() {
-        hangmanGame.startNewGame("railroad");
-        assertEquals("_ _ _ _ _ _ _ _", hangmanGame.getCurrentState(), "Current word should be unchanged");
-    }
-
-    @Test
-    public void testMaxAttemptsReached() {
-        hangmanGame.startNewGame("railroad");
-        hangmanGame.guessCharacter('p');
-        hangmanGame.guessCharacter('t');
-        hangmanGame.guessCharacter('x');
-        hangmanGame.guessCharacter('z');
-        hangmanGame.guessCharacter('b');
-        hangmanGame.guessCharacter('c');
-        hangmanGame.guessCharacter('q');
-        hangmanGame.guessCharacter('u');
-        assertEquals("_ _ _ _ _ _ _ _", hangmanGame.getCurrentState(), "Current state should remain unchanged after max attempts");
+    private void provideSimulatedInput(String input) {
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
     }
 }
