@@ -21,5 +21,6 @@ public interface GameInterface extends Runnable {
      */
     void run();
 
+
     void addCasinoAccount(CasinoAccount casinoAccount);
 }

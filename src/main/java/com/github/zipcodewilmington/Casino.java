@@ -4,8 +4,6 @@ import com.github.zipcodewilmington.casino.CasinoAccount;
 import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
-import com.github.zipcodewilmington.casino.games.BlackJack.BlackJack;
-import com.github.zipcodewilmington.casino.games.BlackJack.BlackJackPlayer;
 import com.github.zipcodewilmington.casino.games.coinflip.CoinFlipPlayer;
 import com.github.zipcodewilmington.casino.games.coinflip.FlipCoinGame;
 import com.github.zipcodewilmington.casino.games.diceroll.DiceRollGame;
@@ -24,11 +22,15 @@ import com.github.zipcodewilmington.utils.IOConsole;
  */
 public class Casino implements Runnable {
     private final IOConsole console = new IOConsole(AnsiColor.BLUE);
+    public CasinoAccountManager cam;
+    String username;
+    String password;
 
     @Override
     public void run() {
         String arcadeDashBoardInput;
         CasinoAccountManager casinoAccountManager = new CasinoAccountManager();
+        cam = casinoAccountManager;
         do {
             arcadeDashBoardInput = getArcadeDashboardInput();
             if ("select-game".equals(arcadeDashBoardInput)) {
@@ -38,6 +40,8 @@ public class Casino implements Runnable {
                 boolean isValidLogin = casinoAccount != null;
                 if (isValidLogin) {
                     String gameSelectionInput = getGameSelectionInput().toUpperCase();
+//                    username = accountName;
+//                    password = accountPassword;
                     if (gameSelectionInput.equals("SLOTS")) {
                         play(new SlotsGame(), new SlotsPlayer());
                     } else if (gameSelectionInput.equals("NUMBERGUESS")) {
@@ -50,8 +54,7 @@ public class Casino implements Runnable {
                         play(new BlackJack(), new BlackJackPlayer());
                     } else if (gameSelectionInput.equals("DICEGAME")) {
                         play(new DiceRollGame(), new DiceRollPlayer());
-                    } else {
-                        // TODO - implement better exception handling
+                    } else {                        // TODO - implement better exception handling
                         String errorMessage = "[ %s ] is an invalid game selection";
                         throw new RuntimeException(String.format(errorMessage, gameSelectionInput));
                     }
