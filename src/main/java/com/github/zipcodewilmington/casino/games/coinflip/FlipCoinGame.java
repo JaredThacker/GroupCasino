@@ -81,6 +81,7 @@ public class FlipCoinGame implements GameInterface {
     public static int playFlipCoin(int heads, int tails){
         Scanner scanner = new Scanner(System.in);
 
+
         System.out.println("\n" +
                 " _____  _  _          ____          _         \n" +
                 "|___  || |(_)  __ _  |___ \\   ___  (_)  __ _  \n" +
@@ -149,6 +150,9 @@ public class FlipCoinGame implements GameInterface {
 
     public static void main(String[] args) {
 
+
+
+
         playFlipCoin(2,1);
 //        System.out.println("\n" +
 //                " _____  _  _          ____          _         \n" +
@@ -179,7 +183,28 @@ public class FlipCoinGame implements GameInterface {
     @Override
     public void run() {
 //        flipCoin(1,2);
-        playFlipCoin(2,1);
+        Scanner scanner = new Scanner(System.in);
+        String playAgain = "y";
+        do {
 
+            playFlipCoin(2, 1);
+            System.out.println("Would you like to play again? y/n");
+            playAgain = scanner.nextLine().toLowerCase();
+        } while (playAgain.equals("y"));
+        System.out.println("\n" +
+                " _____  _  _          ____          _         \n" +
+                "|___  || |(_)  __ _  |___ \\   ___  (_)  __ _  \n" +
+                "   _| || || | / _` |     | | / _ \\ | | / _` | \n" +
+                "  |_  || || || (_| |  ___| || (_) || || | | | \n" +
+                "    |_||_||_| \\__, | |____/  \\___/ |_||_| |_| \n" +
+                "                 |_|                          \n");
+
+//        System.out.println( System.out.println("\n" +
+//                " _____  _  _          ____          _         \n" +
+//                "|___  || |(_)  __ _  |___ \\   ___  (_)  __ _  \n" +
+//                "   _| || || | / _` |     | | / _ \\ | | / _` | \n" +
+//                "  |_  || || || (_| |  ___| || (_) || || | | | \n" +
+//                "    |_||_||_| \\__, | |____/  \\___/ |_||_| |_| \n" +
+//                "                 |_|                          \n");
     }
 }
