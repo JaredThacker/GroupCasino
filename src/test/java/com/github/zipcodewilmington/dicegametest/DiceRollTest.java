@@ -12,6 +12,10 @@ public class DiceRollTest {
 
         //When
         int actual = dice.rollDie(2);
+        DiceRollGame dice = new DiceRollGame();
+
+        //When
+        int actual = dice.rollDie();
 
         //Then
         Assert.assertTrue(actual >= 2);
