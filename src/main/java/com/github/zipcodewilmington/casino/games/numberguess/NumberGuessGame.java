@@ -23,7 +23,7 @@ public class NumberGuessGame implements GameInterface {
 
     public void gameLogic(){
 
-        Integer guessCount = 0;
+        Integer guessCount = 1;
 
         randomNum = generateNew();
 
@@ -37,9 +37,12 @@ public class NumberGuessGame implements GameInterface {
 
         while(true){
 
-            guessCount++;
+            System.out.println("\n------- Pick a number between 1 and 20 -------");
 
-            System.out.println("Pick a number between 1 and 20");
+            while(!scanner.hasNextInt()) {
+                scanner.next();
+                System.out.println("Please enter a number.");
+            }
 
             userGuess = scanner.nextInt();
 
@@ -48,14 +51,17 @@ public class NumberGuessGame implements GameInterface {
                 break;
             }
             if(guessCount == 5){
-                System.out.println("You lose");
+                System.out.println("Sorry you lost.......\n");
                 break;
             }
-            if(userGuess < randomNum){
+            if(userGuess < randomNum && userGuess > 0){
                 System.out.println("Your guess is too low");
-
-            }else if(userGuess > randomNum){
+                guessCount++;
+            }else if(userGuess > randomNum && userGuess < 20){
                 System.out.println("Your guess is too high");
+                guessCount++;
+            } else if (userGuess > 20 || userGuess < 1) {
+                System.out.println("Number from 1 to 20, please.");
             }
         }
     }
