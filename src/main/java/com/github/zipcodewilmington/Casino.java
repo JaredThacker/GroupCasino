@@ -4,6 +4,8 @@ import com.github.zipcodewilmington.casino.CasinoAccount;
 import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
+import com.github.zipcodewilmington.casino.games.BlackJack.BJPlayer;
+import com.github.zipcodewilmington.casino.games.BlackJack.BlackJack;
 import com.github.zipcodewilmington.casino.games.coinflip.CoinFlipPlayer;
 import com.github.zipcodewilmington.casino.games.coinflip.FlipCoinGame;
 import com.github.zipcodewilmington.casino.games.diceroll.DiceRollGame;
@@ -17,9 +19,6 @@ import com.github.zipcodewilmington.casino.games.slots.SlotsPlayer;
 import com.github.zipcodewilmington.utils.AnsiColor;
 import com.github.zipcodewilmington.utils.IOConsole;
 
-/**
- * Created by leon on 7/21/2020.
- */
 public class Casino implements Runnable {
     private final IOConsole console = new IOConsole(AnsiColor.BLUE);
 
@@ -35,27 +34,34 @@ public class Casino implements Runnable {
                 CasinoAccount casinoAccount = casinoAccountManager.getAccount(accountName, accountPassword);
                 boolean isValidLogin = casinoAccount != null;
                 if (isValidLogin) {
-                    String gameSelectionInput = getGameSelectionInput().toUpperCase();
-                    if (gameSelectionInput.equals("SLOTS")) {
-                        play(new SlotsGame(), new SlotsPlayer());
-                    } else if (gameSelectionInput.equals("NUMBERGUESS")) {
-                        play(new NumberGuessGame(), new NumberGuessPlayer());
-                    } else if (gameSelectionInput.equals("FLIPCOIN")) {
-                        play(new FlipCoinGame(), new CoinFlipPlayer());
-                    } else if (gameSelectionInput.equals("HANGMAN")) {
-                        play(new HangmanGame(), new HangmanPlayer());
-                    }else if (gameSelectionInput.equals("BLACKJACK")) {
-//                        play(new BlackJack(), new BlackJackPlayer());
-                    } else if (gameSelectionInput.equals("DICEGAME")) {
-                        play(new DiceRollGame(), new DiceRollPlayer());
-                    } else {                        // TODO - implement better exception handling
-                        String errorMessage = "[ %s ] is an invalid game selection";
-                        throw new RuntimeException(String.format(errorMessage, gameSelectionInput));
+                    String gameSelectionInput = getGameSelectionInput().toUpperCase().trim();
+                    System.out.println("Debug: Game selection input = '" + gameSelectionInput + "'");
+                    switch (gameSelectionInput) {
+                        case "SLOTS":
+                            playGame(new SlotsGame(), new SlotsPlayer());
+                            break;
+                        case "NUMBERGUESS":
+                            playGame(new NumberGuessGame(), new NumberGuessPlayer());
+                            break;
+                        case "FLIPCOIN":
+                            playGame(new FlipCoinGame(), new CoinFlipPlayer());
+                            break;
+                        case "HANGMAN":
+                            playGame(new HangmanGame(), new HangmanPlayer());
+                            break;
+                        case "BLACKJACK":
+                            playGame(new BlackJack(console.getScanner()), new BJPlayer());
+                            break;
+                        case "DICEGAME":
+                            playGame(new DiceRollGame(), new DiceRollPlayer());
+                            break;
+                        default:
+                            String errorMessage = "[ %s ] is an invalid game selection";
+                            throw new RuntimeException(String.format(errorMessage, gameSelectionInput));
                     }
                 } else {
-                    // TODO - implement better exception handling
                     String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
-                    throw new RuntimeException(String.format(errorMessage, accountPassword, accountName));
+                    throw new RuntimeException(String.format(errorMessage, accountName, accountPassword));
                 }
             } else if ("create-account".equals(arcadeDashBoardInput)) {
                 console.println("Welcome to the account-creation screen.");
@@ -71,7 +77,7 @@ public class Casino implements Runnable {
         return console.getStringInput(new StringBuilder()
                 .append("Welcome to the Arcade Dashboard!")
                 .append("\nFrom here, you can select any of the following options:")
-                .append("\n\t[ create-account ], [ select-game ]")
+                .append("\n\t[ create-account ], [ select-game ], [ logout ]")
                 .toString());
     }
 
@@ -79,16 +85,17 @@ public class Casino implements Runnable {
         return console.getStringInput(new StringBuilder()
                 .append("Welcome to the Game Selection Dashboard!")
                 .append("\nFrom here, you can select any of the following options:")
-                .append("\n\t[ SLOTS ], [ NUMBERGUESS ], [ FLIPCOIN ], [ HANGMAN ], [ BLACKJACK ], [DICEGAME] ")
+                .append("\n\t[ SLOTS ], [ NUMBERGUESS ], [ FLIPCOIN ], [ HANGMAN ], [ BLACKJACK ], [ DICEGAME ]")
                 .toString());
     }
 
-    private void play(Object gameObject, Object playerObject) {
-        GameInterface game = (GameInterface)gameObject;
-        PlayerInterface player = (PlayerInterface)playerObject;
-        CasinoAccount casinoAccount = new CasinoAccount();
+    private <T extends GameInterface> void playGame(T game, PlayerInterface player) {
         game.add(player);
+        CasinoAccount casinoAccount = new CasinoAccount();
         game.addCasinoAccount(casinoAccount);
-        game.run();
+        game.play(console.getScanner()); {
+
+        }
+
     }
 }

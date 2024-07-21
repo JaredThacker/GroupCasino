@@ -99,9 +99,9 @@ public class HangmanGame implements  GameInterface {
         return solution;
     }
 
-    public static void main(String[] args) {
-
-    }
+//    public static void main(String[] args) {
+//
+//    }
 
     @Override
     public void add(PlayerInterface player) {
@@ -117,7 +117,9 @@ public class HangmanGame implements  GameInterface {
     @Override
     public void run() {
 
-        Scanner scanner = new Scanner(System.in);
+    }
+
+    public void play(Scanner scanner){
         boolean playAgain = true;
 
         while(playAgain) {
@@ -205,12 +207,11 @@ public class HangmanGame implements  GameInterface {
         playAgain = playAgainInput.equals("yes") || playAgainInput.equals("y");
     }
 
-        scanner.close();
+
     }
 
     @Override
     public void addCasinoAccount(CasinoAccount casinoAccount) {
-
     }
 
     public void startNewGame(String hangman) {
