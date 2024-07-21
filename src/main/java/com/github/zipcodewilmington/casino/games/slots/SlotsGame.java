@@ -23,7 +23,6 @@ public class SlotsGame implements GameInterface {
     }
 
     public void play(){
-
         System.out.println("How much would you like to bet?: ");
 
         while(!scanner.hasNextInt()) {
@@ -118,5 +117,4 @@ public class SlotsGame implements GameInterface {
     public void addCasinoAccount(CasinoAccount casinoAccount) {
 
     }
-    // ... implementation
 }
