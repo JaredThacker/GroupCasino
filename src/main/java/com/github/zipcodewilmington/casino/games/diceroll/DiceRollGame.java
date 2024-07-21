@@ -18,7 +18,7 @@ public class DiceRollGame implements GameInterface {
 
     public static int rollDie(int numberOfDie) {
 
-        int Die = random.nextInt(12)+2;
+        int Die = random.nextInt(11)+2;
 //        int rollSum = 0;
 //
 //        for (int i = 0; i < numberOfDie; i++) {
@@ -55,8 +55,11 @@ public class DiceRollGame implements GameInterface {
 
         if (player1>casino){
             System.out.println("Winner! Winner! Chicken Dinner!! You won " + "$" + userInput*2);
-        }
-        else System.out.println("Sorry, you'll have to take the L this round");
+        } else if (player1 == casino) {
+            System.out.println("It's a tie! Time to roll again. Please type y and restart the game.");
+
+
+        } else System.out.println("Sorry, you'll have to take the L this round");
 
 
 
