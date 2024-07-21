@@ -19,9 +19,6 @@ public class SlotsGame implements GameInterface {
     Scanner scanner = new Scanner(System.in);
     int balance = 1000;
 
-    public SlotsGame(){
-    }
-
     public void play(){
         System.out.println("How much would you like to bet?: ");
 
@@ -68,6 +65,22 @@ public class SlotsGame implements GameInterface {
 
     public static void main(String[] args) {
         SlotsGame slot = new SlotsGame();
+        slot.run();
+    }
+
+    @Override
+    public void add(PlayerInterface player) {
+
+    }
+
+    @Override
+    public void remove(PlayerInterface player) {
+
+    }
+
+    @Override
+    public void run() {
+        SlotsGame slot = new SlotsGame();
 
         System.out.println("\n" +
                 "  ______   _____       ___    _________  ____    ____       _        ______  ____  ____  _____  ____  _____  ________  \n" +
@@ -96,21 +109,6 @@ public class SlotsGame implements GameInterface {
                 break;
             }
         }
-    }
-
-    @Override
-    public void add(PlayerInterface player) {
-
-    }
-
-    @Override
-    public void remove(PlayerInterface player) {
-
-    }
-
-    @Override
-    public void run() {
-
     }
 
     @Override
