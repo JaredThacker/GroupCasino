@@ -91,7 +91,6 @@ public class NumberGuessGame implements GameInterface {
 
     public static void main(String[] args) {
         NumberGuessGame numberGuessGame = new NumberGuessGame();
-
         numberGuessGame.run();
     }
 
