@@ -73,7 +73,7 @@ public class NumberGuessGame implements GameInterface {
         do {
             gameLogic();
             System.out.println("Would you like to play again? y/n");
-            playAgain = scan.nextLine().toLowerCase();
+            playAgain = scan.nextLine().trim().toLowerCase();
         } while (playAgain.equals("y"));
         System.out.println("\n" +
                 " ______   ______   __    __   ______       ______   __   __ ______   ______    \n" +
