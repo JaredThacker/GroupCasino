@@ -46,6 +46,10 @@ public class DiceRollGame implements GameInterface {
         System.out.println("Howdy! Thanks for playing Dice Game. If you have a gambling addiction please call 1-800-GAMBLER");
         System.out.println("This game is you versus the house. You roll first, the house rolls second. Whoever rolls the highest number wins. Good Luck!");
         System.out.println("How Much would you like to bet?");
+        while (!scanner.hasNextInt()){
+            scanner.next();
+            System.out.println("Please enter a number");
+        }
         int userInput = scanner.nextInt();
         System.out.println("Time to roll some dice dude/dudette...");
         System.out.println("You rolled.. " );
