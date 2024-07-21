@@ -10,17 +10,6 @@ import java.util.Scanner;
  * Created by leon on 7/21/2020.
  */
 public class NumberGuessPlayer implements PlayerInterface {
-//    Scanner scanner = new Scanner(System.in);
-//
-//    public Integer guessNum(){
-//        Integer userGuess = scanner.nextInt();
-//        return userGuess;
-//    }
-
-//    @Override
-//    public CasinoAccount getArcadeAccount() {
-//        return null;
-//    }
 
     @Override
     public CasinoAccount getArcadeAccount() {
