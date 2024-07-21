@@ -1,18 +1,20 @@
 package com.github.zipcodewilmington.blackjacktest;
+
 import com.github.zipcodewilmington.casino.games.BlackJack.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Scanner;
+
 import static org.junit.Assert.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class BlackJackTest {
     private BlackJack game;
 
     @Before
     public void setUp() {
-        game = new BlackJack(1000);
+        Scanner scanner = new Scanner(System.in);
+        game = new BlackJack(scanner);
     }
 
     @Test
@@ -109,8 +111,12 @@ public class BlackJackTest {
 
     @Test
     public void testPlayerTurn() {
+        String input = "s\n";
+        Scanner scanner = new Scanner(input);
+        game = new BlackJack(scanner);  // Reinitialize game with mocked input scanner
         game.dealInitialCards();
-        game.playerTurn(Arrays.asList("s")); // Mocking "stand" input
+
+        game.playerTurn();  // No arguments
         assertTrue("Player's hand should have at least 2 cards after turn",
                 game.getPlayer().getHand().size() >= 2);
     }
@@ -220,7 +226,7 @@ public class BlackJackTest {
         player.addToPot(betAmount);
         game.determineWinner();
 
-        assertEquals("Player should lose their bet on a tie", initialMoney - betAmount, player.getMoney());
+        assertEquals("Player should not lose their bet on a tie", initialMoney, player.getMoney());
         assertEquals("Current bet should be reset to 0 after a tie", 0, player.getCurrentBet());
     }
 }
