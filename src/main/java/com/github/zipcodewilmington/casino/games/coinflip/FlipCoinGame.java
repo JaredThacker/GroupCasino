@@ -92,9 +92,16 @@ public class FlipCoinGame implements GameInterface {
 
         System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
         System.out.println("How Much would you like to bet?");
+        while (!scanner.hasNextInt()){
+            scanner.next();
+            System.out.println("Please enter a number");
+        }
         int userInput = scanner.nextInt();
         System.out.println("Type 2 for Heads or 1 for Tails. Choose wisely...");
-
+        while (!scanner.hasNextInt()){
+            scanner.next();
+            System.out.println("Please enter a number");
+        }
         int userInput2 = scanner.nextInt();
         int randNumber = random.nextInt(2)+1;
         if(userInput2 == 1){
