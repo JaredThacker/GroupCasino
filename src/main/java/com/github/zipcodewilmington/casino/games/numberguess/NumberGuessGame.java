@@ -17,6 +17,7 @@ public class NumberGuessGame implements GameInterface {
     Random numGen = new Random(System.currentTimeMillis());
     Integer userGuess;
     Integer randomNum;
+    Integer guessCount;
     CasinoAccountManager cam;
     CasinoAccount casinoAccount;
     String username;
@@ -27,9 +28,7 @@ public class NumberGuessGame implements GameInterface {
     }
 
     public void gameLogic(){
-
-        Integer guessCount = 1;
-
+        guessCount = 1;
         randomNum = generateNew();
 
         System.out.println("\n" +
