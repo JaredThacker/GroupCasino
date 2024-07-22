@@ -214,8 +214,17 @@ public class HangmanGame implements  GameInterface {
     public void addCasinoAccount(CasinoAccount casinoAccount) {
     }
 
+
     public void startNewGame(String hangman) {
+        this.solution = hangman.toLowerCase();
+        this.guessedCharacters = new HashSet<>();
+        this.incorrectGuesses = new HashSet<>();
+        this.maxTries = solution.length();
+        this.triesLeft = maxTries;
     }
+
+//    public void startNewGame(String hangman) {
+//    }
 
 }
 
