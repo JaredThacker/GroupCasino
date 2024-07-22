@@ -1,6 +1,7 @@
 package com.github.zipcodewilmington.casino.games.BlackJack;
 
 import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
@@ -11,6 +12,10 @@ public class BlackJack implements GameInterface {
     private Dealer dealer;
     private Scanner scanner;
     private Deck deck;
+    String username;
+    String password;
+    CasinoAccount casinoAccount;
+    CasinoAccountManager cam;
 
     public BlackJack(Scanner scanner) {
         if (scanner == null) {
@@ -267,5 +272,22 @@ public class BlackJack implements GameInterface {
     @Override
     public void addCasinoAccount(CasinoAccount casinoAccount) {
         // Implementation if needed
+    }
+
+    @Override
+    public void addUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public void addCAM(CasinoAccountManager casinoAccountManager) {
+        this.cam = casinoAccountManager;
+        casinoAccount = cam.getAccount(username, password);
+    }
+
+    @Override
+    public void play(Scanner scanner) {
+        GameInterface.super.play(scanner);
     }
 }

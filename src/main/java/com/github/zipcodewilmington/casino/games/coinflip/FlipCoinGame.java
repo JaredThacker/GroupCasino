@@ -1,6 +1,7 @@
 package com.github.zipcodewilmington.casino.games.coinflip;
 
 import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
@@ -12,6 +13,10 @@ public class FlipCoinGame implements GameInterface {
     int tails = 1;
     PlayerInterface player;
     static Random random = new Random();
+    String username;
+    String password;
+    CasinoAccount casinoAccount;
+    CasinoAccountManager cam;
 
     //        System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
 //        System.out.println("How Much would you like to bet?");
@@ -218,5 +223,22 @@ public class FlipCoinGame implements GameInterface {
     @Override
     public void addCasinoAccount(CasinoAccount casinoAccount) {
 
+    }
+
+    @Override
+    public void addUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public void addCAM(CasinoAccountManager casinoAccountManager) {
+        this.cam = casinoAccountManager;
+        casinoAccount = cam.getAccount(username, password);
+    }
+
+    @Override
+    public void play(Scanner scanner) {
+        GameInterface.super.play(scanner);
     }
 }

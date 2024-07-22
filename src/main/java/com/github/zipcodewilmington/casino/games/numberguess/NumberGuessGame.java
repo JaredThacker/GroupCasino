@@ -1,6 +1,7 @@
 package com.github.zipcodewilmington.casino.games.numberguess;
 
 import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
@@ -16,6 +17,10 @@ public class NumberGuessGame implements GameInterface {
     Random numGen = new Random(System.currentTimeMillis());
     Integer userGuess;
     Integer randomNum;
+    CasinoAccountManager cam;
+    CasinoAccount casinoAccount;
+    String username;
+    String password;
 
     public Integer generateNew(){
         return numGen.nextInt(20) + 1;
@@ -87,6 +92,23 @@ public class NumberGuessGame implements GameInterface {
     @Override
     public void addCasinoAccount(CasinoAccount casinoAccount) {
 
+    }
+
+    @Override
+    public void addUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public void addCAM(CasinoAccountManager casinoAccountManager) {
+        this.cam = casinoAccountManager;
+        casinoAccount = casinoAccountManager.getAccount(username, password);
+    }
+
+    @Override
+    public void play(Scanner scanner) {
+        GameInterface.super.play(scanner);
     }
 
     public static void main(String[] args) {
