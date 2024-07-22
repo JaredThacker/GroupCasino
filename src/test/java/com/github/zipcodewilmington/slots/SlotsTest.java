@@ -25,4 +25,12 @@ public class SlotsTest {
         }
         Assert.assertEquals(expected, 2);
     }
+
+    @Test
+    public void calculateMultiplierTest(){
+    }
+
+    @Test
+    public void spinTest(){
+    }
 }

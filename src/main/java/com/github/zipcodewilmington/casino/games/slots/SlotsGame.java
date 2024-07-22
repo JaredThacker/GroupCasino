@@ -27,19 +27,37 @@ public class SlotsGame implements GameInterface {
     int betAmount;
 
     public void play(){
-        System.out.println("How much would you like to bet?: ");
 
-        while(!scanner.hasNextInt()) {
-            scanner.next();
-            System.out.println("Please enter a number.");
-        }
+            if (balance == 0){
+                run();
+            }
 
-        betAmount = scanner.nextInt();
-        balance -= betAmount;
+            System.out.println("How much would you like to bet?: ");
 
-        reel = spin();
+            while(!scanner.hasNextInt()) {
+                scanner.next();
+                System.out.println("Please enter a number.");
+            }
 
-        calculateWinnings();
+            betAmount = scanner.nextInt();
+
+            if (betAmount > balance){
+                while (betAmount > balance) {
+                    System.out.println("Please enter a lower amount you only have $" + balance);
+                    while (!scanner.hasNextInt()) {
+                        scanner.next();
+                        System.out.println("Please enter a number.");
+                    }
+                    betAmount = scanner.nextInt();
+                }
+            }
+
+            balance -= betAmount;
+
+            reel = spin();
+
+            calculateWinnings();
+            casinoAccount.setBalance(balance);
     }
 
     public void calculateWinnings(){
@@ -48,8 +66,10 @@ public class SlotsGame implements GameInterface {
             int winnings = payoutMultiplier * betAmount;
             balance += winnings;
             System.out.println("\nYou won $" + winnings);
+            System.out.println("\nYour balance is currently $" + balance);
         } else {
-            System.out.println("\nSorry you didn't win anything this time");
+            System.out.println("\nSorry you didn't win anything this time....");
+            System.out.println("\nYour balance is currently $" + balance);
         }
     }
 
@@ -97,10 +117,7 @@ public class SlotsGame implements GameInterface {
 
     @Override
     public void run() {
-//        casinoAccount.setBalance(casinoAccount.getBalance() + 1000);
         balance = casinoAccount.getBalance();
-        System.out.println("Initial Balance is" + casinoAccount.getBalance());
-//        SlotsGame slot = new SlotsGame();
 
         System.out.println("\n" +
                 "  ______   _____       ___    _________  ____    ____       _        ______  ____  ____  _____  ____  _____  ________  \n" +
@@ -111,15 +128,14 @@ public class SlotsGame implements GameInterface {
                 " \\______.'|________| `.___.'   |_____|  |_____||_____||____| |____|`.____ .'|____||____||_____||_____|\\____||________| \n" +
                 "                                                                                                                       \n");
 
-        while (true) {
+        while (balance > 0) {
             play();
 
             System.out.println("\nDo you want to spin again? (y/n)");
             String playAgain = scanner.nextLine().trim().toLowerCase();
 
             if (playAgain.equals("n")) {
-                System.out.println("new balance is " + balance);
-                casinoAccount.setBalance(balance);
+
                 System.out.println("\n" +
                         " _______ .-. .-.  .--.  .-. .-.,-. .-. .-.   .-. .---.  .-. .-.  ,---. .---.  ,---.     ,---.  ,-.      .--..-.   .-.,-..-. .-.  ,--,   \n" +
                         "|__   __|| | | | / /\\ \\ |  \\| || |/ /   \\ \\_/ )// .-. ) | | | |  | .-'/ .-. ) | .-.\\    | .-.\\ | |     / /\\ \\\\ \\_/ )/|(||  \\| |.' .'    \n" +
@@ -131,6 +147,7 @@ public class SlotsGame implements GameInterface {
                 break;
             }
         }
+        System.out.println("--------------Please call this number if you or a loved one suffers from gambling addiction 1-800-GAMBLER--------------\n");
     }
 
     @Override
