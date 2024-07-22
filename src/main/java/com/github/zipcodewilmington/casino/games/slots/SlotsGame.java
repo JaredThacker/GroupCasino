@@ -14,10 +14,12 @@ public class SlotsGame implements GameInterface {
 
     private static final String[] Symbols = {"Cherry", "Moneybag", "GoldBar", "7"};
     private static final int[] payouts = {2, 5, 10, 20};
+    String[] reel;
 
     Random random = new Random(System.currentTimeMillis());
     Scanner scanner = new Scanner(System.in);
     int balance = 1000;
+    int betAmount;
 
     public void play(){
         System.out.println("How much would you like to bet?: ");
@@ -27,9 +29,37 @@ public class SlotsGame implements GameInterface {
             System.out.println("Please enter a number.");
         }
 
-        int betAmount = scanner.nextInt();
+        betAmount = scanner.nextInt();
         balance -= betAmount;
 
+        reel = spin();
+
+        calculateWinnings();
+    }
+
+    public void calculateWinnings(){
+        int payoutMultiplier = calculateMultiplier(reel);
+        if (payoutMultiplier > 0) {
+            int winnings = payoutMultiplier * betAmount;
+            balance += winnings;
+            System.out.println("\nYou won $" + winnings);
+        } else {
+            System.out.println("\nSorry you didn't win anything this time");
+        }
+    }
+
+    private int calculateMultiplier(String[] reel) {
+        if (reel[0].equals(reel[1]) && reel[1].equals(reel[2])) {
+            for (int i = 0; i < Symbols.length; i++) {
+                if (reel[0].equals(Symbols[i])) {
+                    return payouts[i];
+                }
+            }
+        }
+        return 0;
+    }
+
+    private String[] spin(){
         System.out.println("---------Press Enter to spin the slot machine---------");
         scanner.nextLine();
         scanner.nextLine();
@@ -42,25 +72,7 @@ public class SlotsGame implements GameInterface {
         System.out.println("---------Spinning---------");
         System.out.println("[" + reel[0] + "] [" + reel[1] + "] [" + reel[2] + "]");
 
-        int payoutMultiplier = calculatePayout(reel);
-        if (payoutMultiplier > 0) {
-            int winnings = payoutMultiplier * betAmount;
-            balance += winnings;
-            System.out.println("\nYou won $" + winnings);
-        } else {
-            System.out.println("\nSorry you didn't win anything this time");
-        }
-    }
-
-    private int calculatePayout(String[] reel) {
-        if (reel[0].equals(reel[1]) && reel[1].equals(reel[2])) {
-            for (int i = 0; i < Symbols.length; i++) {
-                if (reel[0].equals(Symbols[i])) {
-                    return payouts[i];
-                }
-            }
-        }
-        return 0;
+        return reel;
     }
 
     public static void main(String[] args) {
