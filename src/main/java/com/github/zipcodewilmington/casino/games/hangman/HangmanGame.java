@@ -1,6 +1,7 @@
 package com.github.zipcodewilmington.casino.games.hangman;
 
 import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
@@ -13,6 +14,10 @@ public class HangmanGame implements  GameInterface {
     private int maxTries;
     private int triesLeft;
     private  PlayerInterface player;
+    String username;
+    String password;
+    CasinoAccount casinoAccount;
+    CasinoAccountManager cam;
 
     public HangmanGame() {
         String[] words = {"birds", "phils", "sixers", "flyers", "union", "heat", "astronaut", "thesaurus", "football", "palindrome", "granular"};
@@ -123,7 +128,7 @@ public class HangmanGame implements  GameInterface {
         boolean playAgain = true;
 
         while(playAgain) {
-        HangmanGame hangmanGame = new HangmanGame();
+//        HangmanGame hangmanGame = new HangmanGame();
 
         System.out.println("\n" +
                 "888    888        d8888 888b    888  .d8888b.  888b     d888        d8888 888b    888 \n" +
@@ -138,31 +143,31 @@ public class HangmanGame implements  GameInterface {
                 "                                                                                      \n" +
                 "                                                                                      \n");
 
-        while (!hangmanGame.isGameOver()) {
-            System.out.println("HERE YA GO: " + hangmanGame.getCurrentState());
-            System.out.println("Better HURRY - TRIES LEFT: " + hangmanGame.getTriesLeft());
+        while (!isGameOver()) {
+            System.out.println("HERE YA GO: " + getCurrentState());
+            System.out.println("Better HURRY - TRIES LEFT: " + getTriesLeft());
             System.out.print("ENTER A Character OR WORD: ");
             String input = scanner.nextLine();
 
             if (input.length() == 1) {
                 char guess = input.toLowerCase().charAt(0);
-                boolean isGuessCorrect = hangmanGame.guessCharacter(guess);
+                boolean isGuessCorrect = guessCharacter(guess);
                 if (isGuessCorrect) {
                     System.out.println("DING DING! NOT BAD KINDA ALRIGHT:");
                 } else {
                     System.out.println("HA HA ! WRONG!!");
                 }
             } else {
-                boolean isGuessCorrect = hangmanGame.guessWord(input);
+                boolean isGuessCorrect = guessWord(input);
                 if (isGuessCorrect) {
-                    System.out.println("YOU GUESSED THE WORD: " + hangmanGame.getSolution());
+                    System.out.println("YOU GUESSED THE WORD: " + getSolution());
                 } else {
                     System.out.println("HAHAHAHA SO WRONG !! YOU'RE NOT VERY GOOD AT THIS GAME");
                 }
             }
         }
 
-        if (hangmanGame.isWordGuessed()) {
+        if (isWordGuessed()) {
             System.out.println("\n" +
                     "Y88b   d88P  .d88888b.  888     888      888       888  .d88888b.  888b    888      888 888 888 \n" +
                     " Y88b d88P  d88P\" \"Y88b 888     888      888   o   888 d88P\" \"Y88b 8888b   888      888 888 888 \n" +
@@ -187,7 +192,7 @@ public class HangmanGame implements  GameInterface {
                     " \"Y8888P88 d88P     888 888       888 8888888888       \"Y88888P\"      Y8P     8888888888 888   T88b \n" +
                     "                                                                                                    \n" +
                     "                                                                                                    \n" +
-                    "                                                                                                    \nThe word was: " + hangmanGame.getSolution());
+                    "                                                                                                    \nThe word was: " + getSolution());
         }
 
         System.out.println("\n" +
@@ -212,6 +217,18 @@ public class HangmanGame implements  GameInterface {
 
     @Override
     public void addCasinoAccount(CasinoAccount casinoAccount) {
+    }
+
+    @Override
+    public void addUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public void addCAM(CasinoAccountManager casinoAccountManager) {
+        this.cam = casinoAccountManager;
+        casinoAccount = casinoAccountManager.getAccount(username,password);
     }
 
     public void startNewGame(String hangman) {

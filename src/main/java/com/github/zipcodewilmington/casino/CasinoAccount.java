@@ -10,8 +10,6 @@ public class CasinoAccount {
     String accountPassword;
     private int balance;
 
-
-
     public CasinoAccount(String accountName, String accountPassword) {
         this.accountName = accountName;
         this.accountPassword = accountPassword;

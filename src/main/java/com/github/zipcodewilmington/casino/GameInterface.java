@@ -26,6 +26,10 @@ public interface GameInterface extends Runnable {
 
     void addCasinoAccount(CasinoAccount casinoAccount);
 
+    void addUser(String username, String password);
+
+    void addCAM(CasinoAccountManager casinoAccountManager);
+
     /**
      * Plays the game using the provided scanner
      * This method provides a default implementation that calls run()

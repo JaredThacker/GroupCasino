@@ -1,6 +1,7 @@
 package com.github.zipcodewilmington.casino.games.slots;
 
 import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
@@ -15,10 +16,14 @@ public class SlotsGame implements GameInterface {
     private static final String[] Symbols = {"Cherry", "Moneybag", "GoldBar", "7"};
     private static final int[] payouts = {2, 5, 10, 20};
     String[] reel;
+    CasinoAccountManager casinoAccountManager;
+    CasinoAccount casinoAccount;
+    String username;
+    String password;
 
     Random random = new Random(System.currentTimeMillis());
     Scanner scanner = new Scanner(System.in);
-    int balance = 1000;
+    int balance;
     int betAmount;
 
     public void play(){
@@ -92,7 +97,10 @@ public class SlotsGame implements GameInterface {
 
     @Override
     public void run() {
-        SlotsGame slot = new SlotsGame();
+//        casinoAccount.setBalance(casinoAccount.getBalance() + 1000);
+        balance = casinoAccount.getBalance();
+        System.out.println("Initial Balance is" + casinoAccount.getBalance());
+//        SlotsGame slot = new SlotsGame();
 
         System.out.println("\n" +
                 "  ______   _____       ___    _________  ____    ____       _        ______  ____  ____  _____  ____  _____  ________  \n" +
@@ -104,12 +112,14 @@ public class SlotsGame implements GameInterface {
                 "                                                                                                                       \n");
 
         while (true) {
-            slot.play();
+            play();
 
             System.out.println("\nDo you want to spin again? (y/n)");
-            String playAgain = slot.scanner.nextLine().trim().toLowerCase();
+            String playAgain = scanner.nextLine().trim().toLowerCase();
 
             if (playAgain.equals("n")) {
+                System.out.println("new balance is " + balance);
+                casinoAccount.setBalance(balance);
                 System.out.println("\n" +
                         " _______ .-. .-.  .--.  .-. .-.,-. .-. .-.   .-. .---.  .-. .-.  ,---. .---.  ,---.     ,---.  ,-.      .--..-.   .-.,-..-. .-.  ,--,   \n" +
                         "|__   __|| | | | / /\\ \\ |  \\| || |/ /   \\ \\_/ )// .-. ) | | | |  | .-'/ .-. ) | .-.\\    | .-.\\ | |     / /\\ \\\\ \\_/ )/|(||  \\| |.' .'    \n" +
@@ -126,5 +136,22 @@ public class SlotsGame implements GameInterface {
     @Override
     public void addCasinoAccount(CasinoAccount casinoAccount) {
 
+    }
+
+    @Override
+    public void addUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public void addCAM(CasinoAccountManager casinoAccountManager) {
+        this.casinoAccountManager = casinoAccountManager;
+        casinoAccount = casinoAccountManager.getAccount(username, password);
+    }
+
+    @Override
+    public void play(Scanner scanner) {
+        GameInterface.super.play(scanner);
     }
 }

@@ -21,16 +21,19 @@ import com.github.zipcodewilmington.utils.IOConsole;
 
 public class Casino implements Runnable {
     private final IOConsole console = new IOConsole(AnsiColor.BLUE);
+    String accountName;
+    String accountPassword;
+    CasinoAccountManager casinoAccountManager;
 
     @Override
     public void run() {
         String arcadeDashBoardInput;
-        CasinoAccountManager casinoAccountManager = new CasinoAccountManager();
+        casinoAccountManager = new CasinoAccountManager();
         do {
             arcadeDashBoardInput = getArcadeDashboardInput();
             if ("select-game".equals(arcadeDashBoardInput)) {
-                String accountName = console.getStringInput("Enter your account name:");
-                String accountPassword = console.getStringInput("Enter your account password:");
+                accountName = console.getStringInput("Enter your account name:");
+                accountPassword = console.getStringInput("Enter your account password:");
                 CasinoAccount casinoAccount = casinoAccountManager.getAccount(accountName, accountPassword);
                 boolean isValidLogin = casinoAccount != null;
                 if (isValidLogin) {
@@ -69,6 +72,8 @@ public class Casino implements Runnable {
                 String accountPassword = console.getStringInput("Enter your account password:");
                 CasinoAccount newAccount = casinoAccountManager.createAccount(accountName, accountPassword);
                 casinoAccountManager.registerAccount(newAccount);
+                int initDeposit = console.getIntegerInput("How much would you like to deposit to your account?");
+                casinoAccountManager.getAccount(accountName,accountPassword).setBalance(initDeposit);
             }
         } while (!"logout".equals(arcadeDashBoardInput));
     }
@@ -89,13 +94,13 @@ public class Casino implements Runnable {
                 .toString());
     }
 
-    private <T extends GameInterface> void playGame(T game, PlayerInterface player) {
+    private void playGame(Object gameObject, Object playerObject) {
+        GameInterface game = (GameInterface)gameObject;
+        PlayerInterface player = (PlayerInterface)playerObject;
         game.add(player);
-        CasinoAccount casinoAccount = new CasinoAccount();
-        game.addCasinoAccount(casinoAccount);
+        game.addUser(accountName, accountPassword);
+        game.addCAM(casinoAccountManager);
         game.play(console.getScanner()); {
-
         }
-
     }
 }
