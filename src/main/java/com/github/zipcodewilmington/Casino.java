@@ -74,18 +74,18 @@ public class Casino implements Runnable {
                 casinoAccountManager.registerAccount(newAccount);
                 int initDeposit = console.getIntegerInput("How much would you like to deposit to your account?");
                 casinoAccountManager.getAccount(accountName,accountPassword).setBalance(initDeposit);
-                console.println("Your balance currently is " + casinoAccountManager.getAccount(accountName, accountPassword).getBalance() + "\n");
+                console.println("BALANCE TOTAL: $" + casinoAccountManager.getAccount(accountName, accountPassword).getBalance());
             } else if ("check-balance".equals(arcadeDashBoardInput)) {
                 String accountName = console.getStringInput("Enter your account name:");
                 String accountPassword = console.getStringInput("Enter your account password:");
-                console.println("Your balance currently is " + casinoAccountManager.getAccount(accountName, accountPassword).getBalance() + "\n");
+                console.println("BALANCE TOTAL: $" + casinoAccountManager.getAccount(accountName, accountPassword).getBalance() + "\n");
             } else if ("deposit".equals(arcadeDashBoardInput)) {
                 String accountName = console.getStringInput("Enter your account name:");
                 String accountPassword = console.getStringInput("Enter your account password:");
                 Integer deposit = console.getIntegerInput("How much would you like to deposit?");
                 Integer balance = casinoAccountManager.getAccount(accountName,accountPassword).getBalance();
                 casinoAccountManager.getAccount(accountName,accountPassword).setBalance(balance + deposit);
-                console.println("Your account balance is " + casinoAccountManager.getAccount(accountName, accountPassword).getBalance() + "\n");
+                console.println("BALANCE TOTAL: $" + casinoAccountManager.getAccount(accountName, accountPassword).getBalance() + "\n");
             } else if ("withdraw".equals(arcadeDashBoardInput)) {
                 String accountName = console.getStringInput("Enter your account name:");
                 String accountPassword = console.getStringInput("Enter your account password:");
@@ -96,7 +96,7 @@ public class Casino implements Runnable {
                 }
                 Integer balance = casinoAccountManager.getAccount(accountName, accountPassword).getBalance();
                 casinoAccountManager.getAccount(accountName, accountPassword).setBalance(balance - withdraw);
-                console.println("Your balance currently is " + casinoAccountManager.getAccount(accountName, accountPassword).getBalance() + "\n");
+                console.println("BALANCE TOTAL: $" + casinoAccountManager.getAccount(accountName, accountPassword).getBalance() + "\n");
             }
         } while (!"logout".equals(arcadeDashBoardInput));
     }
