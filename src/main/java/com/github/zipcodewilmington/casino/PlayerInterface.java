@@ -12,9 +12,12 @@ public interface PlayerInterface {
     /**
      * @return the `ArcadeAccount` used to log into the `Arcade` system to play this game
      */
-    CasinoAccount getArcadeAccount();
+//    CasinoAccount getArcadeAccount(String username, String password);
+
     default void playGame() {
     }
+
+    CasinoAccount getArcadeAccount();
 
     /**
      * Defines how a specific implementation of `PlayerInterface` plays their respective game.
@@ -23,5 +26,5 @@ public interface PlayerInterface {
      */
     <SomeReturnType> SomeReturnType play();
 
-    void addWallet(Wallet wallet);
+    void addWallet(Wallet wallet);//
 }

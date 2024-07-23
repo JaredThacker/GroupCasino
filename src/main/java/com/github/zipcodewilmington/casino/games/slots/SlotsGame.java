@@ -1,7 +1,175 @@
 package com.github.zipcodewilmington.casino.games.slots;
 
+import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.CasinoAccountManager;
+import com.github.zipcodewilmington.casino.GameInterface;
+import com.github.zipcodewilmington.casino.PlayerInterface;
+
+import java.util.Random;
+import java.util.Scanner;
+
 /**
  * Created by leon on 7/21/2020.
  */
-public class SlotsGame {
+public class SlotsGame implements GameInterface {
+
+    private static final String[] Symbols = {"\uD83C\uDF52", "\uD83D\uDD14", "\uD83D\uDCB0", "7\uFE0F⃣"};
+    private static final int[] payouts = {2, 5, 10, 20};
+    String[] reel;
+    CasinoAccountManager casinoAccountManager;
+    CasinoAccount casinoAccount;
+    String username;
+    String password;
+
+    Random random = new Random(System.currentTimeMillis());
+    Scanner scanner = new Scanner(System.in);
+    int balance;
+    int betAmount;
+
+    public void play(){
+
+            if (balance == 0){
+                run();
+            }
+
+            System.out.println("How much would you like to bet? (Available Funds = \u001B[32m$" + balance + "\u001B[34m)");
+
+            while(!scanner.hasNextInt()) {
+                scanner.next();
+                System.out.println("Please enter a number.");
+            }
+
+            betAmount = scanner.nextInt();
+
+            if (betAmount > balance){
+                while (betAmount > balance) {
+                    System.out.println("Please enter a lower amount you only have \u001B[32m$$" + balance);
+                    while (!scanner.hasNextInt()) {
+                        scanner.next();
+                        System.out.println("Please enter a number.");
+                    }
+                    betAmount = scanner.nextInt();
+                }
+            }
+
+            balance -= betAmount;
+
+            reel = spin();
+
+            calculateWinnings();
+            casinoAccount.setBalance(balance);
+    }
+
+    public void calculateWinnings(){
+        int payoutMultiplier = calculateMultiplier(reel);
+        if (payoutMultiplier > 0) {
+            int winnings = payoutMultiplier * betAmount;
+            balance += winnings;
+            System.out.println("\nYou won \u001B[32m$" + winnings);
+            System.out.println("\n\u001B[34mYour balance is currently \u001B[32m$" + balance);
+        } else {
+            System.out.println("\n\u001B[34mSorry you didn't win anything this time....");
+            System.out.println("\n\u001B[34mYour balance is currently \u001B[32m$" + balance);
+        }
+    }
+
+    private int calculateMultiplier(String[] reel) {
+        if (reel[0].equals(reel[1]) && reel[1].equals(reel[2])) {
+            for (int i = 0; i < Symbols.length; i++) {
+                if (reel[0].equals(Symbols[i])) {
+                    return payouts[i];
+                }
+            }
+        }
+        return 0;
+    }
+
+    private String[] spin(){
+        System.out.println("\u001B[34m---------Press Enter to spin the slot machine---------");
+        scanner.nextLine();
+        scanner.nextLine();
+
+        String[] reel = new String[3];
+        for (int i = 0; i < 3; i++){
+            reel[i] = Symbols[random.nextInt(Symbols.length)];
+        }
+
+        System.out.println("\u001B[36m----------------------------------" + "  ()");
+        System.out.println("|    " + reel[0] + "    |    " + reel[1] + "    |    " + reel[2] + "   |" + "  /");
+        System.out.println("----------------------------------");
+
+        return reel;
+    }
+
+    public static void main(String[] args) {
+        SlotsGame slot = new SlotsGame();
+        slot.run();
+    }
+
+    @Override
+    public void add(PlayerInterface player) {
+
+    }
+
+    @Override
+    public void remove(PlayerInterface player) {
+
+    }
+
+    @Override
+    public void run() {
+        balance = casinoAccount.getBalance();
+
+        System.out.println("\n" +
+                "  ______   _____       ___    _________  ____    ____       _        ______  ____  ____  _____  ____  _____  ________  \n" +
+                ".' ____ \\ |_   _|    .'   `. |  _   _  ||_   \\  /   _|     / \\     .' ___  ||_   ||   _||_   _||_   \\|_   _||_   __  | \n" +
+                "| (___ \\_|  | |     /  .-.  \\|_/ | | \\_|  |   \\/   |      / _ \\   / .'   \\_|  | |__| |    | |    |   \\ | |    | |_ \\_| \n" +
+                " _.____`.   | |   _ | |   | |    | |      | |\\  /| |     / ___ \\  | |         |  __  |    | |    | |\\ \\| |    |  _| _  \n" +
+                "| \\____) | _| |__/ |\\  `-'  /   _| |_    _| |_\\/_| |_  _/ /   \\ \\_\\ `.___.'\\ _| |  | |_  _| |_  _| |_\\   |_  _| |__/ | \n" +
+                " \\______.'|________| `.___.'   |_____|  |_____||_____||____| |____|`.____ .'|____||____||_____||_____|\\____||________| \n" +
+                "                                                                                                                       \n");
+
+        while (balance > 0) {
+            play();
+
+            System.out.println("\n\u001B[34mDo you want to spin again? (y/n)");
+            String playAgain = scanner.nextLine().trim().toLowerCase();
+
+            if (playAgain.equals("n")) {
+
+                System.out.println("\n" +
+                        " _______ .-. .-.  .--.  .-. .-.,-. .-. .-.   .-. .---.  .-. .-.  ,---. .---.  ,---.     ,---.  ,-.      .--..-.   .-.,-..-. .-.  ,--,   \n" +
+                        "|__   __|| | | | / /\\ \\ |  \\| || |/ /   \\ \\_/ )// .-. ) | | | |  | .-'/ .-. ) | .-.\\    | .-.\\ | |     / /\\ \\\\ \\_/ )/|(||  \\| |.' .'    \n" +
+                        "  )| |   | `-' |/ /__\\ \\|   | || | /     \\   (_)| | |(_)| | | |  | `-.| | |(_)| `-'/    | |-' )| |    / /__\\ \\\\   (_)(_)|   | ||  |  __ \n" +
+                        " (_) |   | .-. ||  __  || |\\  || | \\      ) (   | | | | | | | |  | .-'| | | | |   (     | |--' | |    |  __  | ) (   | || |\\  |\\  \\ ( _)\n" +
+                        "   | |   | | |)|| |  |)|| | |)|| |) \\     | |   \\ `-' / | `-')|  | |  \\ `-' / | |\\ \\    | |    | `--. | |  |)| | |   | || | |)| \\  `-) )\n" +
+                        "   `-'   /(  (_)|_|  (_)/(  (_)|((_)-'   /(_|    )---'  `---(_)  )\\|   )---'  |_| \\)\\   /(     |( __.'|_|  (_)/(_|   `-'/(  (_) )\\____/ \n" +
+                        "        (__)           (__)    (_)      (__)    (_)             (__)  (_)         (__) (__)    (_)           (__)      (__)    (__)     \n");
+                break;
+            }
+        }
+        System.out.println("\u001B[34m--------------Please call this number if you or a loved one suffers from gambling addiction 1-800-GAMBLER--------------\n");
+    }
+
+    @Override
+    public void addCasinoAccount(CasinoAccount casinoAccount) {
+
+    }
+
+    @Override
+    public void addUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public void addCAM(CasinoAccountManager casinoAccountManager) {
+        this.casinoAccountManager = casinoAccountManager;
+        casinoAccount = casinoAccountManager.getAccount(username, password);
+    }
+
+    @Override
+    public void play(Scanner scanner) {
+        GameInterface.super.play(scanner);
+    }
 }

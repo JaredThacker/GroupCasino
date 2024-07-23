@@ -1,5 +1,7 @@
 package com.github.zipcodewilmington.casino.games.hangman;
 
+import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
@@ -12,6 +14,10 @@ public class HangmanGame implements  GameInterface {
     private int maxTries;
     private int triesLeft;
     private  PlayerInterface player;
+    String username;
+    String password;
+    CasinoAccount casinoAccount;
+    CasinoAccountManager cam;
 
     public HangmanGame() {
         String[] words = {"birds", "phils", "sixers", "flyers", "union", "heat", "astronaut", "thesaurus", "football", "palindrome", "granular"};
@@ -19,7 +25,7 @@ public class HangmanGame implements  GameInterface {
         solution = words[random.nextInt(words.length)];
         guessedCharacters = new HashSet<>();
         incorrectGuesses = new HashSet<>();
-        maxTries = words.length;
+        maxTries = solution.length();
         triesLeft = maxTries;
     }
 
@@ -89,16 +95,18 @@ public class HangmanGame implements  GameInterface {
     }
 
     public int getTriesLeft() {
+
         return triesLeft;
     }
 
     public String getSolution() {
+
         return solution;
     }
 
-    public static void main(String[] args) {
-
-    }
+//    public static void main(String[] args) {
+//
+//    }
 
     @Override
     public void add(PlayerInterface player) {
@@ -114,8 +122,13 @@ public class HangmanGame implements  GameInterface {
     @Override
     public void run() {
 
-        Scanner scanner = new Scanner(System.in);
-        HangmanGame hangmanGame = new HangmanGame();
+    }
+
+    public void play(Scanner scanner){
+        boolean playAgain = true;
+
+        while(playAgain) {
+//        HangmanGame hangmanGame = new HangmanGame();
 
         System.out.println("\n" +
                 "888    888        d8888 888b    888  .d8888b.  888b     d888        d8888 888b    888 \n" +
@@ -130,43 +143,43 @@ public class HangmanGame implements  GameInterface {
                 "                                                                                      \n" +
                 "                                                                                      \n");
 
-        while (!hangmanGame.isGameOver()) {
-            System.out.println("HERE YA GO: " + hangmanGame.getCurrentState());
-            System.out.println("Better HURRY - TRIES LEFT: " + hangmanGame.getTriesLeft());
+        while (!isGameOver()) {
+            System.out.println("HERE YA GO: " + getCurrentState());
+            System.out.println("Better HURRY - TRIES LEFT: " + getTriesLeft());
             System.out.print("ENTER A Character OR WORD: ");
             String input = scanner.nextLine();
 
             if (input.length() == 1) {
                 char guess = input.toLowerCase().charAt(0);
-                boolean isGuessCorrect = hangmanGame.guessCharacter(guess);
+                boolean isGuessCorrect = guessCharacter(guess);
                 if (isGuessCorrect) {
                     System.out.println("DING DING! NOT BAD KINDA ALRIGHT:");
                 } else {
                     System.out.println("HA HA ! WRONG!!");
                 }
             } else {
-                boolean isGuessCorrect = hangmanGame.guessWord(input);
+                boolean isGuessCorrect = guessWord(input);
                 if (isGuessCorrect) {
-                    System.out.println("YOU GUESSED THE WORD: " + hangmanGame.getSolution());
+                    System.out.println("YOU GUESSED THE WORD: " + getSolution());
                 } else {
                     System.out.println("HAHAHAHA SO WRONG !! YOU'RE NOT VERY GOOD AT THIS GAME");
                 }
             }
         }
 
-        if (hangmanGame.isWordGuessed()) {
+        if (isWordGuessed()) {
             System.out.println("\n" +
-                    "Y88b   d88P  .d88888b.  888     888      888       888  .d88888b.  888b    888 \n" +
-                    " Y88b d88P  d88P\" \"Y88b 888     888      888   o   888 d88P\" \"Y88b 8888b   888 \n" +
-                    "  Y88o88P   888     888 888     888      888  d8b  888 888     888 88888b  888 \n" +
-                    "   Y888P    888     888 888     888      888 d888b 888 888     888 888Y88b 888 \n" +
-                    "    888     888     888 888     888      888d88888b888 888     888 888 Y88b888 \n" +
-                    "    888     888     888 888     888      88888P Y88888 888     888 888  Y88888 \n" +
-                    "    888     Y88b. .d88P Y88b. .d88P      8888P   Y8888 Y88b. .d88P 888   Y8888 \n" +
-                    "    888      \"Y88888P\"   \"Y88888P\"       888P     Y888  \"Y88888P\"  888    Y888 \n" +
-                    "                                                                               \n" +
-                    "                                                                               \n" +
-                    "                                                                               \n");
+                    "Y88b   d88P  .d88888b.  888     888      888       888  .d88888b.  888b    888      888 888 888 \n" +
+                    " Y88b d88P  d88P\" \"Y88b 888     888      888   o   888 d88P\" \"Y88b 8888b   888      888 888 888 \n" +
+                    "  Y88o88P   888     888 888     888      888  d8b  888 888     888 88888b  888      888 888 888 \n" +
+                    "   Y888P    888     888 888     888      888 d888b 888 888     888 888Y88b 888      888 888 888 \n" +
+                    "    888     888     888 888     888      888d88888b888 888     888 888 Y88b888      888 888 888 \n" +
+                    "    888     888     888 888     888      88888P Y88888 888     888 888  Y88888      Y8P Y8P Y8P \n" +
+                    "    888     Y88b. .d88P Y88b. .d88P      8888P   Y8888 Y88b. .d88P 888   Y8888       \"   \"   \"  \n" +
+                    "    888      \"Y88888P\"   \"Y88888P\"       888P     Y888  \"Y88888P\"  888    Y888      888 888 888 \n" +
+                    "                                                                                                \n" +
+                    "                                                                                                \n" +
+                    "                                                                                                \n");
         } else {
             System.out.println("\n" +
                     " .d8888b.         d8888 888b     d888 8888888888       .d88888b.  888     888 8888888888 8888888b.  \n" +
@@ -179,10 +192,43 @@ public class HangmanGame implements  GameInterface {
                     " \"Y8888P88 d88P     888 888       888 8888888888       \"Y88888P\"      Y8P     8888888888 888   T88b \n" +
                     "                                                                                                    \n" +
                     "                                                                                                    \n" +
-                    "                                                                                                    \nThe word was: " + hangmanGame.getSolution());
+                    "                                                                                                    \nThe word was: " + getSolution());
         }
 
-        scanner.close();
+        System.out.println("\n" +
+                "8888888b.  888             d8888 Y88b   d88P             d8888  .d8888b.         d8888 8888888 888b    888  .d8888b.  \n" +
+                "888   Y88b 888            d88888  Y88b d88P             d88888 d88P  Y88b       d88888   888   8888b   888 d88P  Y88b \n" +
+                "888    888 888           d88P888   Y88o88P             d88P888 888    888      d88P888   888   88888b  888      .d88P \n" +
+                "888   d88P 888          d88P 888    Y888P             d88P 888 888            d88P 888   888   888Y88b 888    .d88P\"  \n" +
+                "8888888P\"  888         d88P  888     888             d88P  888 888  88888    d88P  888   888   888 Y88b888    888\"    \n" +
+                "888        888        d88P   888     888            d88P   888 888    888   d88P   888   888   888  Y88888    888     \n" +
+                "888        888       d8888888888     888           d8888888888 Y88b  d88P  d8888888888   888   888   Y8888            \n" +
+                "888        88888888 d88P     888     888          d88P     888  \"Y8888P88 d88P     888 8888888 888    Y888    888     \n" +
+                "                                                                                                                      \n" +
+                "                                                                                                                      \n" +
+                "                                                                                                                      \n");
+        System.out.println("[ YES or NO ]");
+        String playAgainInput = scanner.nextLine().toLowerCase();
+        playAgain = playAgainInput.equals("yes") || playAgainInput.equals("y");
+    }
+
+
+    }
+
+    @Override
+    public void addCasinoAccount(CasinoAccount casinoAccount) {
+    }
+
+    @Override
+    public void addUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public void addCAM(CasinoAccountManager casinoAccountManager) {
+        this.cam = casinoAccountManager;
+        casinoAccount = casinoAccountManager.getAccount(username,password);
     }
 
     public void startNewGame(String hangman) {

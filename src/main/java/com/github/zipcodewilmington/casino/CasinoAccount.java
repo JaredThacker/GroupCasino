@@ -8,10 +8,15 @@ package com.github.zipcodewilmington.casino;
 public class CasinoAccount {
     String accountName;
     String accountPassword;
+    private int balance;
 
     public CasinoAccount(String accountName, String accountPassword) {
         this.accountName = accountName;
         this.accountPassword = accountPassword;
+    }
+
+    public CasinoAccount() {
+
     }
 
     public String getAccountName() {
@@ -30,4 +35,11 @@ public class CasinoAccount {
         this.accountPassword = accountPassword;
     }
 
+    public int getBalance() {
+        return balance;
+    }
+
+    public void setBalance(int balance) {
+        this.balance = balance;
+    }
 }

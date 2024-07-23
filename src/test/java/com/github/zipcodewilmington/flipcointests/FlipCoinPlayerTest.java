@@ -1,8 +1,13 @@
 package com.github.zipcodewilmington.flipcointests;
 
 import com.github.zipcodewilmington.casino.games.coinflip.CoinFlipPlayer;
+import com.github.zipcodewilmington.casino.games.coinflip.FlipCoinGame;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.Scanner;
+
+import static org.junit.Assert.assertEquals;
 
 public class FlipCoinPlayerTest {
 //private final InputStream sysInBackup = System.in;
@@ -35,7 +40,7 @@ public void testUserGuessIsValid(){
 
     int actual = player.coinFlipPlayerGuess(2,2,1);
 
-    Assert.assertEquals(2,actual);
+    assertEquals(2,actual);
 
 
 }
@@ -54,7 +59,10 @@ public void testUserGuessIsValid(){
 
         int actual = player.coinFlipPlayerGuess(1, 2, 1);
 
-        Assert.assertEquals(1, actual);
+        assertEquals(1, actual);
     }
 
 }
+
+
+

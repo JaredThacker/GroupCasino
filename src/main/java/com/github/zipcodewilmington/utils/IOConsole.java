@@ -4,15 +4,11 @@ import java.io.InputStream;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-/**
- * @author leonhunter
- * @created 02/12/2020 - 6:01 PM
- * used to output prompt to user and get input from user
- */
 public class IOConsole {
     private final Scanner input;
     private final PrintStream output;
     private final AnsiColor ansiColor;
+    private Scanner scanner;
 
     public IOConsole() {
         this(AnsiColor.AUTO);
@@ -26,6 +22,7 @@ public class IOConsole {
         this.ansiColor = ansiColor;
         this.input = new Scanner(in);
         this.output = out;
+        this.scanner = this.input; // Initialize the scanner field
     }
 
     public void print(String val, Object... args) {
@@ -67,5 +64,9 @@ public class IOConsole {
 
     public Integer getIntegerInput(String prompt, Object... args) {
         return getLongInput(prompt, args).intValue();
+    }
+
+    public Scanner getScanner() {
+        return this.scanner;
     }
 }

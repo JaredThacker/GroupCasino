@@ -2,6 +2,7 @@ package com.github.zipcodewilmington.casino.games.coinflip;
 
 import com.github.zipcodewilmington.casino.CasinoAccount;
 import com.github.zipcodewilmington.casino.PlayerInterface;
+import com.github.zipcodewilmington.casino.games.wallet.Wallet;
 
 public class CoinFlipPlayer implements PlayerInterface {
 
@@ -18,6 +19,12 @@ public class CoinFlipPlayer implements PlayerInterface {
 
     }
 
+
+//    @Override
+//    public CasinoAccount getArcadeAccount() {
+//        return null;
+//    }
+
     @Override
     public CasinoAccount getArcadeAccount() {
         return null;
@@ -26,6 +33,11 @@ public class CoinFlipPlayer implements PlayerInterface {
     @Override
     public <SomeReturnType> SomeReturnType play() {
         return null;
+    }
+
+    @Override
+    public void addWallet(Wallet wallet) {
+
     }
 //        System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
 //        System.out.println("How Much would you like to bet?");

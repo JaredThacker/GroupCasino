@@ -1,322 +1,293 @@
 package com.github.zipcodewilmington.casino.games.BlackJack;
 
+import com.github.zipcodewilmington.casino.CasinoAccount;
+import com.github.zipcodewilmington.casino.CasinoAccountManager;
 import com.github.zipcodewilmington.casino.GameInterface;
 import com.github.zipcodewilmington.casino.PlayerInterface;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Scanner;
 
 public class BlackJack implements GameInterface {
-    public int playerMoney;
-    public int sizeOfPot;
-    public Scanner scanner;
-    public List<Card> deck;
-    public List<Card> playerHand;
-    public List<Card> dealerHand;
-    public PlayerInterface player;
+    private BJPlayer player;
+    private Dealer dealer;
+    private Scanner scanner;
+    private Deck deck;
+    String username;
+    String password;
+    CasinoAccount casinoAccount;
+    CasinoAccountManager cam;
 
-
-    public BlackJack(int initialMoney) {
-        this.playerMoney = initialMoney;
-        this.scanner = new Scanner(System.in);
-        this.sizeOfPot = 0;
-        this.deck = initializeDeck();
-        this.playerHand = new ArrayList<>();
-        this.dealerHand = new ArrayList<>();
+    public BlackJack(Scanner scanner) {
+        if (scanner == null) {
+            throw new IllegalArgumentException("Scanner cannot be null");
+        }
+        this.scanner = scanner;
+        initializeGame();
     }
 
-    // Constructor for testing
-    public BlackJack(int initialMoney, List<Card> deck) {
-        this.playerMoney = initialMoney;
-        this.scanner = new Scanner(System.in);
-        this.sizeOfPot = 0;
-        this.deck = new ArrayList<>(deck);
-        this.playerHand = new ArrayList<>();
-        this.dealerHand = new ArrayList<>();
+    private void initializeGame() {
+        this.player = new BJPlayer("Player", 1000); // Initialize with default values
+        this.dealer = new Dealer();
+        this.deck = new Deck();
+        this.deck.createFullDeck();
+        this.deck.shuffleDeck();
+    }
+    //adding for test
+    public BJPlayer getPlayer() {
+        return player;
     }
 
-    public BlackJack() {
+    public Dealer getDealer() {
+        return dealer;
+    }
 
+    public void setDeck(Deck deck) {
+        this.deck = deck;
+    }
+
+
+    private int getBet() {
+        if (player == null) {
+            System.out.println("Error: Player is not initialized.");
+            return 0;
+        }
+        if (scanner == null) {
+            System.out.println("Error: Scanner is not initialized.");
+            return 0;
+        }
+        int bet;
+        do {
+            System.out.print("Enter your bet (or 0 to quit): $");
+            String input = scanner.nextLine();
+            bet = player.getBet(input);
+        } while (bet == -1);
+        return bet;
     }
 
     public void playBlackJack() {
+        displayWelcomeMessage();
         boolean playAgain = true;
 
-        while (playAgain && playerMoney > 0) {
-            System.out.println("\n♠︎ Welcome to Blackjack! ♠︎");
-            System.out.println("Your current bankroll: $" + playerMoney + " 💵");
-            System.out.println("\nPlease enter the amount of money you wish to gamble: ");
-            System.out.println("Enter 0 to exit");
+        while (playAgain && player.getMoney() > 0) {
+            System.out.println("\n💵 Your current bankroll: $" + player.getMoney() + " 💵");
 
-            int bet = getBet(scanner.nextLine());
+            int bet = getBet();
             if (bet == 0) break;
 
-            addToPot(bet);
-            dealInitialCards();
-            displayInitialHands();
+            player.addToPot(bet);
+            boolean continueRound = dealInitialCards();
 
-            playerTurn();
-            if (getHandValue(playerHand) <= 21) {
-                dealerTurn();
+            if (continueRound) {
+                displayInitialHands();
+                playerTurn();
+                if (player.getHandValue() <= 21) {
+                    dealerTurn();
+                }
+                determineWinner();
             }
-            determineWinner();
 
             playAgain = askToPlayAgain();
-
-            if (deck.size() < 20) {
-                System.out.println("Reshuffling the deck...");
-                deck = initializeDeck();
-            }
         }
 
-        System.out.println("\nThank you for playing Blackjack!");
-        System.out.println("Your final bankroll: $" + playerMoney);
-        scanner.close();
+        endGame();
     }
 
-    public int getBet(String input) {
-        try {
-            int bet = Integer.parseInt(input);
-            if (bet == 0) return 0;
-            if (bet > 0 && bet <= playerMoney) {
-                return bet;
+    public boolean dealInitialCards() {
+        player.clearHand();
+        dealer.clearHand();
+
+        if (deck.remainingCards() < 4) {
+            System.out.println("Reshuffling the deck...");
+            deck.createFullDeck();
+            deck.shuffleDeck();
+        }
+
+        player.addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
+        player.addCard(deck.drawCard());
+        dealer.addCard(deck.drawCard());
+
+        if (player.hasBlackjack()) {
+            System.out.println("\nPlayer has Blackjack!");
+            dealer.displayHand(false);
+            if (dealer.hasBlackjack()) {
+                System.out.println("\nDealer also has Blackjack. It's a push.");
+                player.pushBet();
             } else {
-                System.out.println("Invalid bet. Please enter a value between 1 and " + playerMoney);
+                System.out.println("\n🎉 You win with Blackjack!");
+                player.winBet(2.5);
             }
-        } catch (NumberFormatException e) {
-            System.out.println("Invalid input. Please enter a number.");
+            return false;
         }
-        return -1;
+
+        if (dealer.hasBlackjack()) {
+            System.out.println("\nDealer has Blackjack!");
+            dealer.displayHand(false);
+            player.loseBet();
+            return false;
+        }
+
+        return true;
     }
 
-    public void addToPot(int amount) {
-        sizeOfPot += amount;
-        playerMoney -= amount;
-    }
-
-    public void setPot(int amount) {
-        this.sizeOfPot = amount;
-    }
-
-    public boolean isBlackjack(List<Card> hand) {
-        return hand.size() == 2 && getHandValue(hand) == 21;
+    private void displayInitialHands() {
+        player.displayHand();
+        dealer.displayHand(true);
     }
 
     public void playerTurn() {
         while (true) {
-            System.out.println("\nYour hand: ");
-            displayHand(playerHand, false);
-
-            if (playerHand.size() == 2) {
-                System.out.print("Do you want to hit (h), stand (s), or double down (d)? ");
-            } else {
-                System.out.print("Do you want to hit (h) or stand (s)? ");
-            }
-
+            System.out.print("\n➤ Do you want to hit (h), stand (s)" +
+                    (player.getHand().size() == 2 ? ", or double down (d)? " : "? "));
             String choice = scanner.nextLine().toLowerCase();
             if (playerAction(choice)) {
                 break;
             }
+            player.displayHand();
         }
     }
 
-    public boolean playerAction(String choice) {
+    private boolean playerAction(String choice) {
         if ("h".equals(choice)) {
-            hit(playerHand);
-            if (getHandValue(playerHand) > 21) {
-                System.out.println("You bust!");
+            player.addCard(deck.drawCard());
+            if (player.getHandValue() > 21) {
+                System.out.println("\nYou bust!");
                 return true;
             }
         } else if ("s".equals(choice)) {
             return true;
-        } else if ("d".equals(choice) && playerHand.size() == 2) {
-            if (playerMoney >= sizeOfPot) {
-                addToPot(sizeOfPot);
-                hit(playerHand);
+        } else if ("d".equals(choice) && player.getHand().size() == 2) {
+            if (doubleDown()) {
                 return true;
-            } else {
-                System.out.println("Not enough money to double down.");
             }
         } else {
-            System.out.println("Invalid choice. Please try again.");
+            System.out.println("\n❌ Invalid choice. Please try again.");
         }
         return false;
     }
 
-    public void dealerTurn() {
-        System.out.println("\nDealer's turn: ");
-        displayHand(dealerHand, false);
-
-        while (getHandValue(dealerHand) < 17) {
-            hit(dealerHand);
-            displayHand(dealerHand, false);
+    public boolean doubleDown() {
+        if (player.getMoney() >= player.getCurrentBet()) {
+            player.addToPot(player.getCurrentBet());
+            player.addCard(deck.drawCard());
+            System.out.println("\nYour hand after doubling down:");
+            player.displayHand();
+            return true;
+        } else {
+            System.out.println("\nNot enough money to double down.");
+            return false;
         }
+    }
 
-        if (getHandValue(dealerHand) > 21) {
-            System.out.println("Dealer busts!");
+    public void dealerTurn() {
+        dealer.displayHand(false);
+        while (dealer.shouldHit()) {
+            dealer.addCard(deck.drawCard());
+            dealer.displayHand(false);
         }
     }
 
     public void determineWinner() {
-        int playerScore = getHandValue(playerHand);
-        int dealerScore = getHandValue(dealerHand);
+        int playerScore = player.getHandValue();
+        int dealerScore = dealer.getHandValue();
 
-        System.out.println("\nYour hand: ");
-        displayHand(playerHand, false);
-        System.out.println("\nDealer's hand: ");
-        displayHand(dealerHand, false);
+        player.displayHand();
+        dealer.displayHand(false);
 
         if (playerScore > 21) {
-            System.out.println("You bust. Dealer wins.");
+            System.out.println("\n😖 You bust. Dealer wins.");
+            player.loseBet();
         } else if (dealerScore > 21) {
-            System.out.println("Dealer busts. You win!");
-            playerMoney += sizeOfPot * 2;
+            System.out.println("\n😂 Dealer busts. You win!");
+            player.winBet(2);
         } else if (playerScore > dealerScore) {
-            System.out.println("You win!");
-            playerMoney += sizeOfPot * 2;
+            System.out.println("\n💰 You win!");
+            player.winBet(2);
         } else if (playerScore < dealerScore) {
-            System.out.println("Dealer wins.");
+            System.out.println("\n😓 Dealer wins.");
+            player.loseBet();
         } else {
-            System.out.println("It's a tie.");
-            playerMoney += sizeOfPot;
+            System.out.println("\n☹️ It's a tie!");
+            player.pushBet();
         }
-        sizeOfPot = 0;
     }
 
-    public List<Card> initializeDeck() {
-        List<Card> newDeck = new ArrayList<>();
-        for (Suit suit : Suit.values()) {
-            for (Rank rank : Rank.values()) {
-                newDeck.add(new Card(rank, suit));
-            }
-        }
-        Collections.shuffle(newDeck);
-        return newDeck;
-    }
-
-    public void displayHand(List<Card> hand, boolean hideFirstCard) {
-        for (int i = 0; i < hand.size(); i++) {
-            if (i == 0 && hideFirstCard) {
-                System.out.println("[Hidden]");
+    private boolean askToPlayAgain() {
+        while (true) {
+            System.out.print("\n⎆ Do you want to play again? (y/n): ");
+            String playChoice = scanner.nextLine().toLowerCase();
+            if ("y".equals(playChoice)) {
+                return true;
+            } else if ("n".equals(playChoice)) {
+                return false;
             } else {
-                System.out.println(hand.get(i).toString());
+                System.out.println("\n❌ Invalid input. Please enter 'y' for yes or 'n' for no.");
             }
         }
-        if (!hideFirstCard) {
-            System.out.println("Total value: " + getHandValue(hand));
-        }
     }
 
-    public int getHandValue(List<Card> hand) {
-        int value = 0;
-        int aceCount = 0;
-        for (Card card : hand) {
-            if (card.getRank() == Rank.ACE) {
-                aceCount++;
-            }
-            value += card.getRank().getValue();
-        }
-        while (value > 21 && aceCount > 0) {
-            value -= 10;
-            aceCount--;
-        }
-        return value;
+    private void displayWelcomeMessage() {
+        System.out.println("♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦");
+        System.out.println("                                                         ");
+        System.out.println("   ██╗    ██╗███████╗██╗      ██████╗ ██████╗ ███╗   ███╗███████╗");
+        System.out.println("   ██║    ██║██╔════╝██║     ██╔════╝██╔═══██╗████╗ ████║██╔════╝");
+        System.out.println("   ██║ █╗ ██║█████╗  ██║     ██║     ██║   ██║██╔████╔██║█████╗  ");
+        System.out.println("   ██║███╗██║██╔══╝  ██║     ██║     ██║   ██║██║╚██╔╝██║██╔══╝  ");
+        System.out.println("   ╚███╔███╔╝███████╗███████╗╚██████╗╚██████╔╝██║ ╚═╝ ██║███████╗");
+        System.out.println("    ╚══╝╚══╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚══════╝");
+        System.out.println("                                                         ");
+        System.out.println("   ████████╗ ██████╗     ██████╗ ██╗      █████╗  ██████╗██╗  ██╗     ██╗ █████╗  ██████╗██╗  ██╗");
+        System.out.println("   ╚══██╔══╝██╔═══██╗    ██╔══██╗██║     ██╔══██╗██╔════╝██║ ██╔╝     ██║██╔══██╗██╔════╝██║ ██╔╝");
+        System.out.println("      ██║   ██║   ██║    ██████╔╝██║     ███████║██║     █████╔╝      ██║███████║██║     █████╔╝ ");
+        System.out.println("      ██║   ██║   ██║    ██╔══██╗██║     ██╔══██║██║     ██╔═██╗ ██   ██║██╔══██║██║     ██╔═██╗ ");
+        System.out.println("      ██║   ╚██████╔╝    ██████╔╝███████╗██║  ██║╚██████╗██║  ██╗╚█████╔╝██║  ██║╚██████╗██║  ██╗");
+        System.out.println("      ╚═╝    ╚═════╝     ╚═════╝ ╚══════╝╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝ ╚════╝ ╚═╝  ╚═╝ ╚═════╝╚═╝  ╚═╝");
+        System.out.println("                                                         ");
+        System.out.println("♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦♠♥♣♦");
     }
 
-    public void dealInitialCards() {
-        playerHand.clear();
-        dealerHand.clear();
-        hit(playerHand);
-        hit(dealerHand);
-        hit(playerHand);
-        hit(dealerHand);
-    }
-
-    public void displayInitialHands() {
-        // System.out.println("\nYour hand: ");
-        // displayHand(playerHand, false);
-        System.out.println("\nDealer's hand: ");
-        displayHand(dealerHand, true);
-        //System.out.println("Total value of dealers hand: " + getHandValue(dealerHand));
-    }
-
-    public boolean askToPlayAgain() {
-        System.out.print("\nDo you want to play again? (y/n): ");
-        String playChoice = scanner.nextLine().toLowerCase();
-        return "y".equals(playChoice);
-    }
-
-    public void hit(List<Card> hand) {
-        if (!deck.isEmpty()) {
-            hand.add(deck.remove(0));
-        }
-    }
-
-    public void doubleDown() {
-        if (playerMoney >= sizeOfPot) {
-            addToPot(sizeOfPot / 2);
-            hit(playerHand);
-            System.out.println("\nYour hand after doubling down:");
-            displayHand(playerHand, false);
-        } else {
-            System.out.println("Not enough money to double down.");
-            playerTurn();
-        }
-    }
-
-    @Override
-    public void add(PlayerInterface player) {
-        this.player = player;
-
-    }
-
-    @Override
-    public void remove(PlayerInterface player) {
-
+    private void endGame() {
+        System.out.println("\nThank you for playing Blackjack!");
+        System.out.println("Your final bankroll: $" + player.getMoney());
+        System.out.println("National Problem Gambling Helpline number: 1-800-GAMBLER\n\n\n\n");
     }
 
     @Override
     public void run() {
-        BlackJack blackjack = new  BlackJack(playerMoney, deck);
-
+        playBlackJack();
     }
 
-    public enum Suit { CLUBS, DIAMONDS, HEARTS, SPADES }
-
-    public enum Rank {
-        TWO(2), THREE(3), FOUR(4), FIVE(5), SIX(6), SEVEN(7), EIGHT(8), NINE(9), TEN(10),
-        JACK(10), QUEEN(10), KING(10), ACE(11);
-
-        public final int value;
-        Rank(int value) { this.value = value; }
-        public int getValue() { return value; }
-    }
-
-    public static class Card {
-        public final Rank rank;
-        public final Suit suit;
-
-        public Card(Rank rank, Suit suit) {
-            this.rank = rank;
-            this.suit = suit;
+    @Override
+    public void add(PlayerInterface player) {
+        if (player instanceof BJPlayer) {
+            this.player = (BJPlayer) player;
         }
-
-        public Rank getRank() { return rank; }
-
-        @Override
-        public String toString() { return rank + " of " + suit; }
     }
 
-    // Getter methods for testing
-    public List<Card> getPlayerHand() { return playerHand; }
-    public List<Card> getDealerHand() { return dealerHand; }
-    public int getPlayerMoney() { return playerMoney; }
-    public int getPot() { return sizeOfPot; }
+    @Override
+    public void remove(PlayerInterface player) {
+        // Do not set player to null, just remove it from the game if needed
+    }
 
-    public static void main(String[] args) {
-        BlackJack game = new BlackJack(1000);
-        game.playBlackJack();
+    @Override
+    public void addCasinoAccount(CasinoAccount casinoAccount) {
+        // Implementation if needed
+    }
+
+    @Override
+    public void addUser(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
+
+    @Override
+    public void addCAM(CasinoAccountManager casinoAccountManager) {
+        this.cam = casinoAccountManager;
+        casinoAccount = cam.getAccount(username, password);
+    }
+
+    @Override
+    public void play(Scanner scanner) {
+        GameInterface.super.play(scanner);
     }
 }

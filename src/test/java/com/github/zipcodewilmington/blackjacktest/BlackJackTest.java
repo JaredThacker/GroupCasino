@@ -1,167 +1,232 @@
 package com.github.zipcodewilmington.blackjacktest;
 
-import com.github.zipcodewilmington.casino.games.BlackJack.BlackJack;
+import com.github.zipcodewilmington.casino.games.BlackJack.*;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.util.Scanner;
+
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BlackJackTest {
-
     private BlackJack game;
-    private List<BlackJack.Card> testDeck;
 
     @Before
     public void setUp() {
-        testDeck = new ArrayList<>();
-        // Add some predetermined cards to the deck
-        testDeck.add(new BlackJack.Card(BlackJack.Rank.ACE, BlackJack.Suit.HEARTS));
-        testDeck.add(new BlackJack.Card(BlackJack.Rank.KING, BlackJack.Suit.SPADES));
-        testDeck.add(new BlackJack.Card(BlackJack.Rank.QUEEN, BlackJack.Suit.DIAMONDS));
-        testDeck.add(new BlackJack.Card(BlackJack.Rank.JACK, BlackJack.Suit.CLUBS));
-        testDeck.add(new BlackJack.Card(BlackJack.Rank.TEN, BlackJack.Suit.HEARTS));
-        testDeck.add(new BlackJack.Card(BlackJack.Rank.NINE, BlackJack.Suit.SPADES));
-        testDeck.add(new BlackJack.Card(BlackJack.Rank.EIGHT, BlackJack.Suit.DIAMONDS));
-        testDeck.add(new BlackJack.Card(BlackJack.Rank.SEVEN, BlackJack.Suit.CLUBS));
-
-        game = new BlackJack(1000, new ArrayList<>(testDeck));
+        Scanner scanner = new Scanner(System.in);
+        game = new BlackJack(scanner);
     }
 
     @Test
-    public void testInitialDeal() {
+    public void testInitialPlayerMoney() {
+        assertEquals("Initial player money should be 1000", 1000, game.getPlayer().getMoney());
+    }
+
+    @Test
+    public void testDealInitialCards() {
         game.dealInitialCards();
-        assertEquals(2, game.getPlayerHand().size());
-        assertEquals(2, game.getDealerHand().size());
+        assertEquals("Player should have 2 cards", 2, game.getPlayer().getHand().size());
+        assertEquals("Dealer should have 2 cards", 2, game.getDealer().getHand().size());
+        assertNotEquals("Player's cards should be different", game.getPlayer().getHand().get(0), game.getPlayer().getHand().get(1));
+        assertNotEquals("Dealer's cards should be different", game.getDealer().getHand().get(0), game.getDealer().getHand().get(1));
     }
 
     @Test
-    public void testGetHandValue() {
-        List<BlackJack.Card> hand = new ArrayList<>();
-        hand.add(new BlackJack.Card(BlackJack.Rank.ACE, BlackJack.Suit.HEARTS));
-        hand.add(new BlackJack.Card(BlackJack.Rank.KING, BlackJack.Suit.SPADES));
-        assertEquals(21, game.getHandValue(hand));
+    public void testPlayerBet() {
+        BJPlayer player = game.getPlayer();
+        int initialMoney = player.getMoney();
+        player.addToPot(100);
+        assertEquals("Current bet should be 100", 100, player.getCurrentBet());
+        assertEquals("Player money should decrease by 100", initialMoney - 100, player.getMoney());
+    }
 
-        hand.add(new BlackJack.Card(BlackJack.Rank.FIVE, BlackJack.Suit.DIAMONDS));
-        assertEquals(16, game.getHandValue(hand));
+    @Test
+    public void testPlayerWinBet() {
+        BJPlayer player = game.getPlayer();
+        int initialMoney = player.getMoney();
+        player.addToPot(100);
+        player.winBet(2);
+        assertEquals("Player should win 200", initialMoney + 100, player.getMoney());
+        assertEquals("Current bet should be reset to 0", 0, player.getCurrentBet());
+    }
+
+    @Test
+    public void testPlayerLoseBet() {
+        BJPlayer player = game.getPlayer();
+        int initialMoney = player.getMoney();
+        player.addToPot(100);
+        player.loseBet();
+        assertEquals("Player should lose 100", initialMoney - 100, player.getMoney());
+        assertEquals("Current bet should be reset to 0", 0, player.getCurrentBet());
     }
 
     @Test
     public void testIsBlackjack() {
-        List<BlackJack.Card> hand = new ArrayList<>();
-        hand.add(new BlackJack.Card(BlackJack.Rank.ACE, BlackJack.Suit.HEARTS));
-        hand.add(new BlackJack.Card(BlackJack.Rank.KING, BlackJack.Suit.SPADES));
-        assertTrue(game.isBlackjack(hand));
+        BJPlayer player = game.getPlayer();
+        player.clearHand();
+        player.addCard(new Card(Value.ACE, Suit.HEARTS));
+        player.addCard(new Card(Value.KING, Suit.SPADES));
+        assertTrue("Ace and King should be blackjack", player.hasBlackjack());
 
-        hand.add(new BlackJack.Card(BlackJack.Rank.TWO, BlackJack.Suit.DIAMONDS));
-        assertFalse(game.isBlackjack(hand));
+        player.clearHand();
+        player.addCard(new Card(Value.KING, Suit.HEARTS));
+        player.addCard(new Card(Value.QUEEN, Suit.SPADES));
+        assertFalse("Two face cards should not be blackjack", player.hasBlackjack());
+    }
+
+    @Test
+    public void testGetHandValue() {
+        BJPlayer player = game.getPlayer();
+        player.clearHand();
+        player.addCard(new Card(Value.ACE, Suit.HEARTS));
+        player.addCard(new Card(Value.KING, Suit.SPADES));
+        assertEquals("Ace and King should be 21", 21, player.getHandValue());
+
+        player.addCard(new Card(Value.FIVE, Suit.DIAMONDS));
+        assertEquals("Ace should be counted as 1 when over 21", 16, player.getHandValue());
+    }
+
+    @Test
+    public void testDoubleDown() {
+        BJPlayer player = game.getPlayer();
+        int initialMoney = player.getMoney();
+        player.addToPot(100);
+        player.addCard(new Card(Value.TEN, Suit.HEARTS));
+        player.addCard(new Card(Value.FIVE, Suit.SPADES));
+
+        assertTrue("Double down should be successful", game.doubleDown());
+        assertEquals("Current bet should be 200", 200, player.getCurrentBet());
+        assertEquals("Player money should decrease by 200", initialMoney - 200, player.getMoney());
+        assertEquals("Player should have 3 cards after double down", 3, player.getHand().size());
+    }
+
+    @Test
+    public void testGetBet() {
+        BJPlayer player = game.getPlayer();
+        assertEquals("Valid bet should be accepted", 100, player.getBet("100"));
+        assertEquals("Zero bet should be accepted", 0, player.getBet("0"));
+        assertEquals("Invalid input should return -1", -1, player.getBet("invalid"));
+        assertEquals("Bet larger than player money should return -1", -1, player.getBet("2000"));
+    }
+
+    @Test
+    public void testPlayerTurn() {
+        String input = "s\n";
+        Scanner scanner = new Scanner(input);
+        game = new BlackJack(scanner);  // Reinitialize game with mocked input scanner
+        game.dealInitialCards();
+
+        game.playerTurn();  // No arguments
+        assertTrue("Player's hand should have at least 2 cards after turn",
+                game.getPlayer().getHand().size() >= 2);
     }
 
     @Test
     public void testDealerTurn() {
         game.dealInitialCards();
         game.dealerTurn();
-        assertTrue(game.getHandValue(game.getDealerHand()) >= 17);
-    }
-
-    @Test
-    public void testAddToPot() {
-        int initialMoney = game.getPlayerMoney();
-        int initialPot = game.getPot();
-        int betAmount = 100;
-
-        game.addToPot(betAmount);
-
-        assertEquals(initialMoney - betAmount, game.getPlayerMoney());
-        assertEquals(initialPot + betAmount, game.getPot());
-    }
-
-    @Test
-    public void testInitializeDeck() {
-        List<BlackJack.Card> deck = game.initializeDeck();
-        assertEquals(52, deck.size());
-    }
-
-    @Test
-    public void testGetBet() {
-        assertEquals(100, game.getBet("100"));
-        assertEquals(0, game.getBet("0"));
-        assertEquals(-1, game.getBet("invalid"));
-        assertEquals(-1, game.getBet("2000")); // Assuming player money is 1000
-    }
-
-    @Test
-    public void testPlayerAction() {
-        game = new BlackJack(1000, new ArrayList<>(testDeck));
-        game.dealInitialCards();
-
-        // Test hit
-        assertFalse(game.playerAction("h"));
-        assertEquals(3, game.getPlayerHand().size());
-
-        // Test stand
-        assertTrue(game.playerAction("s"));
-
-        // Test double down
-        game = new BlackJack(1000, new ArrayList<>(testDeck)); // Reset the game
-        game.dealInitialCards();
-        int initialMoney = game.getPlayerMoney();
-        int initialPot = 100;
-        game.setPot(initialPot); // Set the pot directly for testing
-        assertTrue(game.playerAction("d"));
-        assertEquals(3, game.getPlayerHand().size());
-        assertEquals(initialPot * 2, game.getPot());
-        assertEquals(initialMoney - initialPot, game.getPlayerMoney());
-
-        // Test invalid input
-        assertFalse(game.playerAction("x"));
+        assertTrue("Dealer's hand value should be at least 17 after turn",
+                game.getDealer().getHandValue() >= 17);
     }
 
     @Test
     public void testDetermineWinner() {
+        BJPlayer player = game.getPlayer();
+        Dealer dealer = game.getDealer();
+
         // Player wins
-        game.dealInitialCards();
-        game.getPlayerHand().clear();
-        game.getPlayerHand().add(new BlackJack.Card(BlackJack.Rank.KING, BlackJack.Suit.HEARTS));
-        game.getPlayerHand().add(new BlackJack.Card(BlackJack.Rank.QUEEN, BlackJack.Suit.HEARTS));
-        game.getDealerHand().clear();
-        game.getDealerHand().add(new BlackJack.Card(BlackJack.Rank.TEN, BlackJack.Suit.HEARTS));
-        game.getDealerHand().add(new BlackJack.Card(BlackJack.Rank.NINE, BlackJack.Suit.SPADES));
-        int initialMoney = game.getPlayerMoney();
-        int pot = 100;
-        game.addToPot(pot);
+        player.clearHand();
+        dealer.clearHand();
+        player.addCard(new Card(Value.TEN, Suit.HEARTS));
+        player.addCard(new Card(Value.NINE, Suit.SPADES));
+        dealer.addCard(new Card(Value.TEN, Suit.DIAMONDS));
+        dealer.addCard(new Card(Value.SEVEN, Suit.CLUBS));
+        player.addToPot(100);
         game.determineWinner();
-        assertEquals(initialMoney + pot, game.getPlayerMoney());
+        assertEquals("Player should win 200", 1100, player.getMoney());
 
         // Dealer wins
-        game = new BlackJack(1000, new ArrayList<>(testDeck));
-        game.dealInitialCards();
-        game.getPlayerHand().clear();
-        game.getPlayerHand().add(new BlackJack.Card(BlackJack.Rank.TEN, BlackJack.Suit.HEARTS));
-        game.getPlayerHand().add(new BlackJack.Card(BlackJack.Rank.NINE, BlackJack.Suit.SPADES));
-        game.getDealerHand().clear();
-        game.getDealerHand().add(new BlackJack.Card(BlackJack.Rank.KING, BlackJack.Suit.HEARTS));
-        game.getDealerHand().add(new BlackJack.Card(BlackJack.Rank.QUEEN, BlackJack.Suit.HEARTS));
-        initialMoney = game.getPlayerMoney();
-        pot = 100;
-        game.addToPot(pot);
+        player.clearHand();
+        dealer.clearHand();
+        player.addCard(new Card(Value.TEN, Suit.HEARTS));
+        player.addCard(new Card(Value.SEVEN, Suit.SPADES));
+        dealer.addCard(new Card(Value.TEN, Suit.DIAMONDS));
+        dealer.addCard(new Card(Value.NINE, Suit.CLUBS));
+        player.addToPot(100);
         game.determineWinner();
-        assertEquals(initialMoney - pot, game.getPlayerMoney());
+        assertEquals("Player should lose 100", 1000, player.getMoney());
+    }
 
-        // Tie
-        game = new BlackJack(1000, new ArrayList<>(testDeck));
-        game.dealInitialCards();
-        game.getPlayerHand().clear();
-        game.getPlayerHand().add(new BlackJack.Card(BlackJack.Rank.TEN, BlackJack.Suit.HEARTS));
-        game.getPlayerHand().add(new BlackJack.Card(BlackJack.Rank.TEN, BlackJack.Suit.SPADES));
-        game.getDealerHand().clear();
-        game.getDealerHand().add(new BlackJack.Card(BlackJack.Rank.TEN, BlackJack.Suit.DIAMONDS));
-        game.getDealerHand().add(new BlackJack.Card(BlackJack.Rank.TEN, BlackJack.Suit.CLUBS));
-        initialMoney = game.getPlayerMoney();
-        pot = 100;
-        game.addToPot(pot);
+    @Test
+    public void testBlackjackPayout() {
+        BJPlayer player = game.getPlayer();
+        Dealer dealer = game.getDealer();
+
+        // Set up the deck to ensure a blackjack for the player
+        Deck rigged = new Deck();
+        rigged.addCard(new Card(Value.KING, Suit.SPADES));
+        rigged.addCard(new Card(Value.SEVEN, Suit.CLUBS));
+        rigged.addCard(new Card(Value.ACE, Suit.HEARTS));
+        rigged.addCard(new Card(Value.TEN, Suit.DIAMONDS));
+        game.setDeck(rigged);
+
+        int initialMoney = player.getMoney();  // Should be 1000
+        int bet = 100;
+        player.addToPot(bet);
+
+        boolean continueGame = game.dealInitialCards();
+
+        assertFalse("Game should end on blackjack", continueGame);
+        int expectedPayout = initialMoney + (int)(bet * 1.5);  // Blackjack pays 3:2
+        assertEquals("Player should win 150 for blackjack", expectedPayout, player.getMoney());
+    }
+
+    @Test
+    public void testPlayerBust() {
+        BJPlayer player = game.getPlayer();
+        player.clearHand();
+        player.addCard(new Card(Value.TEN, Suit.HEARTS));
+        player.addCard(new Card(Value.KING, Suit.SPADES));
+        player.addCard(new Card(Value.FIVE, Suit.DIAMONDS));
+        player.addToPot(100);
         game.determineWinner();
-        assertEquals(initialMoney, game.getPlayerMoney());
+        assertEquals("Player should lose 100 on bust", 900, player.getMoney());
+    }
+
+    @Test
+    public void testDealerBust() {
+        BJPlayer player = game.getPlayer();
+        Dealer dealer = game.getDealer();
+        player.clearHand();
+        dealer.clearHand();
+        player.addCard(new Card(Value.TEN, Suit.HEARTS));
+        player.addCard(new Card(Value.EIGHT, Suit.SPADES));
+        dealer.addCard(new Card(Value.TEN, Suit.DIAMONDS));
+        dealer.addCard(new Card(Value.NINE, Suit.CLUBS));
+        dealer.addCard(new Card(Value.FIVE, Suit.HEARTS));
+        player.addToPot(100);
+        game.determineWinner();
+        assertEquals("Player should win 200 when dealer busts", 1100, player.getMoney());
+    }
+
+    @Test
+    public void testTie() {
+        BJPlayer player = game.getPlayer();
+        Dealer dealer = game.getDealer();
+        int initialMoney = player.getMoney();
+        int betAmount = 100;
+
+        player.clearHand();
+        dealer.clearHand();
+        player.addCard(new Card(Value.TEN, Suit.HEARTS));
+        player.addCard(new Card(Value.EIGHT, Suit.SPADES));
+        dealer.addCard(new Card(Value.JACK, Suit.DIAMONDS));
+        dealer.addCard(new Card(Value.EIGHT, Suit.CLUBS));
+
+        player.addToPot(betAmount);
+        game.determineWinner();
+
+        assertEquals("Player should not lose their bet on a tie", initialMoney, player.getMoney());
+        assertEquals("Current bet should be reset to 0 after a tie", 0, player.getCurrentBet());
     }
 }
