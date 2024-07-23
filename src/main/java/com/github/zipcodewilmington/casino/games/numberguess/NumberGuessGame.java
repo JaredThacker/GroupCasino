@@ -18,6 +18,9 @@ public class NumberGuessGame implements GameInterface {
     Integer userGuess;
     Integer randomNum;
     Integer guessCount;
+    Integer betAmount;
+    Integer winnings;
+    Integer balance;
     CasinoAccountManager cam;
     CasinoAccount casinoAccount;
     String username;
@@ -40,9 +43,12 @@ public class NumberGuessGame implements GameInterface {
                 "                                                                                                            \n");
 
         while(true){
+            System.out.println("How much would you like to wager? If you guess correct your money will double!");
+            betAmount = scanner.nextInt();
+            winnings = betAmount * 2;
+            balance = casinoAccount.getBalance();
 
             System.out.println("\n------- Pick a number between 1 and 20 -------");
-
             while(!scanner.hasNextInt()) {
                 scanner.next();
                 System.out.println("Please enter a number.");
@@ -52,10 +58,14 @@ public class NumberGuessGame implements GameInterface {
 
             if(userGuess == randomNum){
                 System.out.println("You win");
+                balance += winnings;
+                casinoAccount.setBalance(balance);
                 break;
             }
             if(guessCount == 5){
                 System.out.println("Sorry you lost.......\n");
+                balance -= betAmount;
+                casinoAccount.setBalance(balance);
                 break;
             }
             if(userGuess < randomNum && userGuess > 0){
