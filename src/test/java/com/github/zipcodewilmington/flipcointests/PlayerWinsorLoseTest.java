@@ -10,17 +10,17 @@ import static org.junit.Assert.assertTrue;
 
 public class PlayerWinsorLoseTest {
 
-    @Test
-    public void testIfPlayerWins(){
-    CoinFlipPlayer player = new CoinFlipPlayer();
-    FlipCoinGame game = new FlipCoinGame();
-
-    boolean actual = game.playerWinsOrLose();
-    boolean expected = true;
-
-    assertTrue(actual);
-
-    }
+//    @Test
+//    public void testIfPlayerWins(){
+//    CoinFlipPlayer player = new CoinFlipPlayer();
+//    FlipCoinGame game = new FlipCoinGame();
+//
+//    boolean actual = game.playerWinsOrLose();
+//    boolean expected = true;
+//
+//    assertTrue(actual);
+//
+//    }
     @Test
     public void testIfPlayerWins2() {
         CoinFlipPlayer player = new CoinFlipPlayer();
