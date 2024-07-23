@@ -18,6 +18,7 @@ public class DiceRollGame implements GameInterface {
     CasinoAccountManager cam;
     static int balance;
     static int betAmount;
+    String playAgain = "y";
 
 //    public DiceRollGame(int numberOfDie){
 //        this.numberOfDie = 2;
@@ -37,7 +38,7 @@ public class DiceRollGame implements GameInterface {
         return Die;
     }
 
-    public static void playDiceGame(){
+    public void playDiceGame(){
 
     Scanner scanner = new Scanner(System.in);
         System.out.println("\n" +
@@ -51,6 +52,12 @@ public class DiceRollGame implements GameInterface {
                 " ░ ░  ░  ▒ ░░           ░      ░      ░      ░ ░   ░   ░   ▒   ░      ░      ░      ░      ░   \n" +
                 "   ░     ░  ░ ░         ░  ░   ░  ░   ░  ░         ░       ░  ░       ░      ░  ░   ░  ░   ░  ░\n" +
                 " ░          ░                                                                                  \n");
+        balance = casinoAccount.getBalance();
+
+        if (balance == 0){
+            this.playAgain = "n";
+            run();
+        }
         System.out.println("Howdy! Thanks for playing Dice Game. If you have a gambling addiction please call 1-800-GAMBLER");
         System.out.println("This game is you versus the house. You roll first, the house rolls second. Whoever rolls the highest number wins. Good Luck!");
         System.out.println("How Much would you like to bet?");
@@ -59,6 +66,19 @@ public class DiceRollGame implements GameInterface {
             System.out.println("Please enter a number");
         }
          betAmount = scanner.nextInt();
+
+        if (betAmount > balance){
+            while (betAmount > balance) {
+                System.out.println("Please enter a lower amount you only have $" + balance);
+                while (!scanner.hasNextInt()) {
+                    scanner.next();
+                    System.out.println("Please enter a number.");
+                }
+                betAmount = scanner.nextInt();
+            }
+        }
+
+
         balance -= betAmount;
         System.out.println("Time to roll some dice dude/dudette...");
         System.out.println("You rolled.. " );
@@ -95,7 +115,7 @@ public class DiceRollGame implements GameInterface {
 //        DiceRollGame die = new DiceRollGame(2);
 //     Integer  toss = die.rollDie();
 //        System.out.println(toss);
-        playDiceGame();
+//        playDiceGame();
     }
 
     @Override
@@ -113,12 +133,13 @@ public class DiceRollGame implements GameInterface {
         balance = casinoAccount.getBalance();
         System.out.println("Initial Balance is $" + casinoAccount.getBalance());
         Scanner scanner2 = new Scanner(System.in);
-        String playAgain = "y";
+//        String playAgain = "y";
         do {
 
             playDiceGame();
             System.out.println("Would you like to play again? y/n");
-            playAgain = scanner2.nextLine().toLowerCase();
+            playAgain = (balance == 0) ? "n" : scanner2.nextLine().trim().toLowerCase();
+            System.out.println("new balance is " + "$" + balance);
         } while (playAgain.equals("y"));
 
         System.out.println("new balance is " + "$" + balance);

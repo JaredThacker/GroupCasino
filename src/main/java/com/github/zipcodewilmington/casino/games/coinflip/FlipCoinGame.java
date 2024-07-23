@@ -19,6 +19,7 @@ public class FlipCoinGame implements GameInterface {
     CasinoAccountManager cam;
     static int balance;
     static int betAmount;
+    String playAgain = "y";
 
     //        System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
 //        System.out.println("How Much would you like to bet?");
@@ -85,7 +86,7 @@ public class FlipCoinGame implements GameInterface {
     }
 
 
-    public static int playFlipCoin(int heads, int tails){
+    public int playFlipCoin(int heads, int tails){
         Scanner scanner = new Scanner(System.in);
 
 
@@ -96,14 +97,31 @@ public class FlipCoinGame implements GameInterface {
                 "  |_  || || || (_| |  ___| || (_) || || | | | \n" +
                 "    |_||_||_| \\__, | |____/  \\___/ |_||_| |_| \n" +
                 "                 |_|                          \n");
+        balance = casinoAccount.getBalance();
+
+        if (balance == 0){
+            this.playAgain = "n";
+            run();
+        }
 
         System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
-        System.out.println("How Much would you like to bet?");
+        System.out.println("How much would you like to bet?");
         while (!scanner.hasNextInt()){
             scanner.next();
             System.out.println("Please enter a number");
         }
          betAmount = scanner.nextInt();
+        if (betAmount > balance){
+            while (betAmount > balance) {
+                System.out.println("Please enter a lower amount you only have $" + balance);
+                while (!scanner.hasNextInt()) {
+                    scanner.next();
+                    System.out.println("Please enter a number.");
+                }
+                betAmount = scanner.nextInt();
+            }
+        }
+
         balance -= betAmount;
         System.out.println("Type 2 for Heads or 1 for Tails. Choose wisely...");
         while (!scanner.hasNextInt()){
@@ -153,6 +171,8 @@ public class FlipCoinGame implements GameInterface {
 
     public boolean playerWinsOrLose() {
 
+
+
 //        CoinFlipPlayer coinFlipPlayer = new CoinFlipPlayer;
 //
 //    if(flipCoin(2,1) )
@@ -170,7 +190,7 @@ public class FlipCoinGame implements GameInterface {
 
 
 
-        playFlipCoin(2,1);
+//        playFlipCoin(2,1);
 //        System.out.println("\n" +
 //                " _____  _  _          ____          _         \n" +
 //                "|___  || |(_)  __ _  |___ \\   ___  (_)  __ _  \n" +
