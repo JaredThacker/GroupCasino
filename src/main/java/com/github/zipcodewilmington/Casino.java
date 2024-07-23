@@ -60,11 +60,13 @@ public class Casino implements Runnable {
                             break;
                         default:
                             String errorMessage = "[ %s ] is an invalid game selection";
-                            throw new RuntimeException(String.format(errorMessage, gameSelectionInput));
+                            System.out.printf(errorMessage + "%n", gameSelectionInput);
+//                            throw new RuntimeException(String.format(errorMessage, gameSelectionInput));
                     }
                 } else {
                     String errorMessage = "No account found with name of [ %s ] and password of [ %s ]";
-                    throw new RuntimeException(String.format(errorMessage, accountName, accountPassword));
+                    System.out.printf(errorMessage + "%n", accountName, accountPassword);
+//                    throw new RuntimeException(String.format(errorMessage, accountName, accountPassword));
                 }
             } else if ("create-account".equals(arcadeDashBoardInput)) {
                 console.println("Welcome to the account-creation screen.");

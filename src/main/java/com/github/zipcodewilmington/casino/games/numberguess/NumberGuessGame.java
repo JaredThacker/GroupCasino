@@ -51,7 +51,7 @@ public class NumberGuessGame implements GameInterface {
             run();
         }
 
-        System.out.println("How much would you like to wager? If you guess correct your money will double!!! (Available funds = $" + balance + ")");
+        System.out.println("How much would you like to wager? If you guess correct your money will double!!! (Available funds = \u001B[32m$" + balance + "\u001B[34m)");
 
         while(!scanner.hasNextInt()) {
             scanner.next();
@@ -63,7 +63,7 @@ public class NumberGuessGame implements GameInterface {
 
         if (betAmount > balance){
             while (betAmount > balance) {
-                System.out.println("Please enter a lower amount you only have $" + balance);
+                System.out.println("Please enter a lower amount you only have \u001B[32m$" + balance + "\u001B[34m");
                 while (!scanner.hasNextInt()) {
                     scanner.next();
                     System.out.println("Please enter a number.");
@@ -83,17 +83,17 @@ public class NumberGuessGame implements GameInterface {
             userGuess = scanner.nextInt();
 
             if(userGuess == randomNum){
-                System.out.println("You won $" + winnings + "!!!!!!!");
+                System.out.println("You won \u001B[32m$" + winnings + "\u001B[34m!!!!!!!");
                 balance += winnings;
                 casinoAccount.setBalance(balance);
-                System.out.println("Your current balance is now $" + balance);
+                System.out.println("Your current balance is now \u001B[32m$" + balance + "\u001B[34m");
                 break;
             }
             if(guessCount == 5){
                 System.out.println("Sorry you lost.......\n");
                 balance -= betAmount;
                 casinoAccount.setBalance(balance);
-                System.out.println("Your current balance is now $" + balance);
+                System.out.println("Your current balance is now \u001B[32m$" + balance + "\u001B[34m");
                 break;
             }
             if(userGuess < randomNum && userGuess > 0){
@@ -113,7 +113,7 @@ public class NumberGuessGame implements GameInterface {
         Scanner scan = new Scanner(System.in);
         while (playAgain.equals("y")){
             gameLogic();
-            System.out.println("Would you like to play again? y/n");
+            System.out.println("\u001B[34mWould you like to play again? y/n");
             playAgain = (balance == 0) ? "n" : scan.nextLine().trim().toLowerCase();
         }
         System.out.println("\n" +
