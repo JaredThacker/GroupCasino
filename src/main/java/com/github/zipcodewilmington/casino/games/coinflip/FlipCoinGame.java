@@ -201,7 +201,7 @@ public class FlipCoinGame implements GameInterface {
     public void run() {
 //        flipCoin(1,2);
         balance = casinoAccount.getBalance();
-        System.out.println("Initial Balance is" + casinoAccount.getBalance());
+        System.out.println("Initial Balance is $" + casinoAccount.getBalance());
         Scanner scanner = new Scanner(System.in);
         String playAgain = "y";
         do {
@@ -210,6 +210,8 @@ public class FlipCoinGame implements GameInterface {
             System.out.println("Would you like to play again? y/n");
             playAgain = scanner.nextLine().toLowerCase();
         } while (playAgain.equals("y"));
+        System.out.println("new balance is " + "$" + balance);
+        casinoAccount.setBalance(balance);
         System.out.println("\n" +
                 " _____  _  _          ____          _         \n" +
                 "|___  || |(_)  __ _  |___ \\   ___  (_)  __ _  \n" +
