@@ -96,8 +96,8 @@ public class DiceRollGame implements GameInterface {
 
 
         } else
-            balance -= betAmount;
-            System.out.println("Sorry, you'll have to take the L this round");
+        {balance -= betAmount;
+            System.out.println("Sorry, you'll have to take the L this round");}
 
 
 
@@ -142,7 +142,7 @@ public class DiceRollGame implements GameInterface {
             System.out.println("new balance is " + "$" + balance);
         } while (playAgain.equals("y"));
 
-        System.out.println("new balance is " + "$" + balance);
+//        System.out.println("new balance is " + "$" + balance);
         casinoAccount.setBalance(balance);
         System.out.println("\n" +
                 "▓█████▄  ██▓ ▄████▄  ▓█████ ▓█████ ▓█████      ▄████  ▄▄▄       ███▄ ▄███▓▓█████ ▓█████ ▓█████ \n" +
