@@ -13,7 +13,7 @@ import java.util.Scanner;
  */
 public class SlotsGame implements GameInterface {
 
-    private static final String[] Symbols = {"Cherry", "Moneybag", "GoldBar", "7"};
+    private static final String[] Symbols = {"\uD83C\uDF52", "\uD83D\uDD14", "\uD83D\uDCB0", "7\uFE0F⃣"};
     private static final int[] payouts = {2, 5, 10, 20};
     String[] reel;
     CasinoAccountManager casinoAccountManager;
@@ -32,7 +32,7 @@ public class SlotsGame implements GameInterface {
                 run();
             }
 
-            System.out.println("How much would you like to bet? (Available Funds = $" + balance + ")");
+            System.out.println("How much would you like to bet? (Available Funds = \u001B[32m$" + balance + "\u001B[34m)");
 
             while(!scanner.hasNextInt()) {
                 scanner.next();
@@ -43,7 +43,7 @@ public class SlotsGame implements GameInterface {
 
             if (betAmount > balance){
                 while (betAmount > balance) {
-                    System.out.println("Please enter a lower amount you only have $" + balance);
+                    System.out.println("Please enter a lower amount you only have \u001B[32m$$" + balance);
                     while (!scanner.hasNextInt()) {
                         scanner.next();
                         System.out.println("Please enter a number.");
@@ -65,11 +65,11 @@ public class SlotsGame implements GameInterface {
         if (payoutMultiplier > 0) {
             int winnings = payoutMultiplier * betAmount;
             balance += winnings;
-            System.out.println("\nYou won $" + winnings);
-            System.out.println("\nYour balance is currently $" + balance);
+            System.out.println("\nYou won \u001B[32m$" + winnings);
+            System.out.println("\n\u001B[34mYour balance is currently \u001B[32m$" + balance);
         } else {
-            System.out.println("\nSorry you didn't win anything this time....");
-            System.out.println("\nYour balance is currently $" + balance);
+            System.out.println("\n\u001B[34mSorry you didn't win anything this time....");
+            System.out.println("\n\u001B[34mYour balance is currently \u001B[32m$" + balance);
         }
     }
 
@@ -85,7 +85,7 @@ public class SlotsGame implements GameInterface {
     }
 
     private String[] spin(){
-        System.out.println("---------Press Enter to spin the slot machine---------");
+        System.out.println("\u001B[34m---------Press Enter to spin the slot machine---------");
         scanner.nextLine();
         scanner.nextLine();
 
@@ -94,8 +94,9 @@ public class SlotsGame implements GameInterface {
             reel[i] = Symbols[random.nextInt(Symbols.length)];
         }
 
-        System.out.println("---------Spinning---------");
-        System.out.println("[" + reel[0] + "] [" + reel[1] + "] [" + reel[2] + "]");
+        System.out.println("\u001B[36m----------------------------------" + "  ()");
+        System.out.println("|    " + reel[0] + "    |    " + reel[1] + "    |    " + reel[2] + "   |" + "  /");
+        System.out.println("----------------------------------");
 
         return reel;
     }
@@ -131,7 +132,7 @@ public class SlotsGame implements GameInterface {
         while (balance > 0) {
             play();
 
-            System.out.println("\nDo you want to spin again? (y/n)");
+            System.out.println("\n\u001B[34mDo you want to spin again? (y/n)");
             String playAgain = scanner.nextLine().trim().toLowerCase();
 
             if (playAgain.equals("n")) {
@@ -147,7 +148,7 @@ public class SlotsGame implements GameInterface {
                 break;
             }
         }
-        System.out.println("--------------Please call this number if you or a loved one suffers from gambling addiction 1-800-GAMBLER--------------\n");
+        System.out.println("\u001B[34m--------------Please call this number if you or a loved one suffers from gambling addiction 1-800-GAMBLER--------------\n");
     }
 
     @Override
