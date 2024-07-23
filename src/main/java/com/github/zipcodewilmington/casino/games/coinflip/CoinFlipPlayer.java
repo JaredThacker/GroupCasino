@@ -19,6 +19,7 @@ public class CoinFlipPlayer implements PlayerInterface {
 
     }
 
+
 //    @Override
 //    public CasinoAccount getArcadeAccount() {
 //        return null;

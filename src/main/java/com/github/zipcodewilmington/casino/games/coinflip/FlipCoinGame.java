@@ -20,6 +20,7 @@ public class FlipCoinGame implements GameInterface {
     static int balance;
     static int betAmount;
     String playAgain = "y";
+    int guess;
 
     //        System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
 //        System.out.println("How Much would you like to bet?");
@@ -171,12 +172,20 @@ public class FlipCoinGame implements GameInterface {
 
     public boolean playerWinsOrLose() {
 
-
+        CoinFlipPlayer player = new CoinFlipPlayer();
+        if (player.coinFlipPlayerGuess(guess,1,2) == flipCoin(2,1)){
+            System.out.println("Bingo! Your guess was correct! You won " + "$"+ (betAmount * 2));
+            balance += betAmount*2;
+            return true;
+        }
+        System.out.println("Sorry wrong guess :(");
+        balance -= betAmount;
+        return false;
 
 //        CoinFlipPlayer coinFlipPlayer = new CoinFlipPlayer;
 //
 //    if(flipCoin(2,1) )
-        return false;
+//        return false;
     }
 
 
