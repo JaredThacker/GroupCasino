@@ -17,6 +17,8 @@ public class FlipCoinGame implements GameInterface {
     String password;
     CasinoAccount casinoAccount;
     CasinoAccountManager cam;
+    static int balance;
+    static int betAmount;
 
     //        System.out.println("Howdy! Thanks for playing Coin Flip. If you have a gambling addiction please call 1-800-GAMBLER");
 //        System.out.println("How Much would you like to bet?");
@@ -101,7 +103,8 @@ public class FlipCoinGame implements GameInterface {
             scanner.next();
             System.out.println("Please enter a number");
         }
-        int userInput = scanner.nextInt();
+         betAmount = scanner.nextInt();
+        balance -= betAmount;
         System.out.println("Type 2 for Heads or 1 for Tails. Choose wisely...");
         while (!scanner.hasNextInt()){
             scanner.next();
@@ -111,11 +114,11 @@ public class FlipCoinGame implements GameInterface {
         int randNumber = random.nextInt(2)+1;
         if(userInput2 == 1){
             System.out.println("You guessed Tails, I hope you ain't fail.");
-//            return userInput;
+//            return betAmount;
         }
         else if(userInput2 ==2) {
             System.out.println("You guessed Heads for the bread.");
-//            return userInput;
+//            return betAmount;
         }
         else return tails;
 
@@ -136,11 +139,13 @@ public class FlipCoinGame implements GameInterface {
         else{ System.out.println("The coin landed on Heads.");
         }
         if (userInput2 == flipCoin(2,1)){
-            System.out.println("Bingo! Your guess was correct! You won " + "$"+ (userInput * 2));
-            return userInput;
+            System.out.println("Bingo! Your guess was correct! You won " + "$"+ (betAmount * 2));
+            balance += betAmount*2;
+            return balance;
         }
         System.out.println("Sorry wrong guess :(");
-        return tails;
+        balance -= betAmount;
+        return balance;
 
 
     }
@@ -195,6 +200,8 @@ public class FlipCoinGame implements GameInterface {
     @Override
     public void run() {
 //        flipCoin(1,2);
+        balance = casinoAccount.getBalance();
+        System.out.println("Initial Balance is" + casinoAccount.getBalance());
         Scanner scanner = new Scanner(System.in);
         String playAgain = "y";
         do {
