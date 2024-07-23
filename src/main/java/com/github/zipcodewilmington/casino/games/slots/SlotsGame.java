@@ -32,7 +32,7 @@ public class SlotsGame implements GameInterface {
                 run();
             }
 
-            System.out.println("How much would you like to bet?: ");
+            System.out.println("How much would you like to bet? (Available Funds = $" + balance + ")");
 
             while(!scanner.hasNextInt()) {
                 scanner.next();
